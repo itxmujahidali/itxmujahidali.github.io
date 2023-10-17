@@ -411,8 +411,8 @@
             .then(response => response.json())
             .then(data => {
                 const { ip, city, region, country, loc, org, postal, timezone } = data;
-                console.log(`IP: ${ip}, City: ${city}, Region: ${region}, Country: ${country}, ORG: ${org}, Postal: ${postal}, TimeZone: ${timezone}`);
-                console.log(`Latitude and Longitude: ${loc}`);
+                // console.log(`IP: ${ip}, City: ${city}, Region: ${region}, Country: ${country}, ORG: ${org}, Postal: ${postal}, TimeZone: ${timezone}`);
+                // console.log(`Latitude and Longitude: ${loc}`);
                 sendEmailWithLocation(ip, city, region, country, loc,org, postal, timezone);
    
             })
@@ -421,7 +421,7 @@
                 // Handle the error as needed
             });
     
-        function sendEmailWithLocation(city,region,country,loc) {
+        function sendEmailWithLocation(ip, city, region, country, loc,org, postal, timezone) {
             emailjs.send("service_ntpef16", "template_qiokg5l", {
                 from_name: "Portfolio",
                 to_name: "Mujahid",
