@@ -413,7 +413,7 @@
                 const { ip, city, region, country, loc, org, postal, timezone } = data;
                 console.log(`IP: ${ip}, City: ${city}, Region: ${region}, Country: ${country}, ORG: ${org}, Postal: ${postal}, TimeZone: ${timezone}`);
                 console.log(`Latitude and Longitude: ${loc}`);
-                sendEmailWithLocation(city,region,country,loc);
+                sendEmailWithLocation(ip, city, region, country, loc,org, postal, timezone);
    
             })
             .catch(error => {
