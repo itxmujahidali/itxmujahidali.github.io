@@ -79,7 +79,8 @@
                     <p class="section-subtitle">Who Am I ?</p>
                     <h2 class="section-title mb-3">About Me</h2>
                     <p>
-                        Welcome to my portfolio! <br>- My name is <b>Mujahid Ali</b>, and I'm a Full Stack Python Developer
+                        Welcome to my portfolio! <br>- My name is <b>Mujahid Ali</b>, and I'm a Full Stack Python
+                        Developer
                         with a years of experience building efficient, scalable, and secure solutions
                         for clients across various industries.
                         <br>
@@ -92,7 +93,8 @@
                         projects that showcase my technical skills and expertise. I'm passionate about taking
                         on new challenges and working collaboratively to build the next big thing.
                         <br>
-                        - If you're looking for a reliable and dedicated full stack developer, I'm confident in my ability
+                        - If you're looking for a reliable and dedicated full stack developer, I'm confident in my
+                        ability
                         to deliver results that exceed expectations. Let's work together to bring your vision to life!
 
 
@@ -100,13 +102,15 @@
 
                     <h6>EXPERIENCE</h6>
                     <p>
-                        I have <b>1.5+ year</b> of experience in Web Development field. I embarked on my journey as a web developer with an enriching internship at WEBBUGS, where I honed my skills for 3 months. 
-                        Now, I continue to thrive and contribute to the dynamic world of web development at SPATIAL STACK, where I've been a valuable part of the team for almost a year.
+                        I have <b>1.5+ year</b> of experience in Web Development field. I embarked on my journey as a
+                        web developer with an enriching internship at WEBBUGS, where I honed my skills for 3 months.
+                        Now, I continue to thrive and contribute to the dynamic world of web development at SPATIAL
+                        STACK, where I've been a valuable part of the team for almost a year.
                         I have built numerous REST APIs using Django RestFramework, delivering robust and scalable
                         solutions that meet the highest standards of quality.
                     </p>
 
-<!--                     <button class="btn-rounded btn btn-outline-primary mt-4">
+                    <!--                     <button class="btn-rounded btn btn-outline-primary mt-4">
                         <a href="./assets/cv/Mujahid_Ali_Resume.pdf">Download CV</a>
                     </button> -->
                 </div>
@@ -176,7 +180,7 @@
             <h6 class="section-title mb-6">Portfolio</h6>
             <!-- row -->
             <div class="row">
-                
+
                 <div class="col-md-4">
                     <a href="https://www.forteinfinity.com/" class="portfolio-card" target="_blank">
                         <img class="portfolio-card-img" src="assets/imgs/forte.jpg" class="img-responsive rounded"
@@ -190,12 +194,11 @@
                         </span>
                     </a>
                 </div>
-                
+
                 <div class="col-md-4">
-                    <a href="https://mujahid-ecom.netlify.app/"
-                        class="portfolio-card" target="_blank">
-                        <img class="portfolio-card-img" src="./assets/imgs/mujahid-ecom.jpeg" class="img-responsive rounded"
-                            alt="">
+                    <a href="https://mujahid-ecom.netlify.app/" class="portfolio-card" target="_blank">
+                        <img class="portfolio-card-img" src="./assets/imgs/mujahid-ecom.jpeg"
+                            class="img-responsive rounded" alt="">
                         <span class="portfolio-card-overlay">
                             <span class="portfolio-card-caption">
                                 <h2 style="color:maroon">Live Preview</h2>
@@ -206,7 +209,7 @@
                         </span>
                     </a>
                 </div>
-                
+
 
                 <div class="col-md-4">
                     <a href="./pages/FYP project.html" class="portfolio-card" target="_blank">
@@ -355,17 +358,16 @@
             <p class="section-subtitle">How can you communicate?</p>
             <h6 class="section-title mb-5">Contact Me</h6>
             <!-- contact form -->
-            <form action="https://formspree.io/f/mbjegqpl" method="post" class="contact-form col-md-10 col-lg-8 m-auto">
+            <form id="contactForm" class="contact-form col-md-10 col-lg-8 m-auto">
                 <div class="form-row">
                     <div class="form-group col-sm-6">
-                        <input type="text" size="50" class="form-control" placeholder="Your Name" required>
+                        <input type="text" id="name" class="form-control" placeholder="Your Name" required>
                     </div>
                     <div class="form-group col-sm-6">
-                        <input type="email" name="_replyto" class="form-control" placeholder="Enter Email" requried>
+                        <input type="email" id="email" class="form-control" placeholder="Enter Email" required>
                     </div>
                     <div class="form-group col-sm-12">
-                        <textarea name="comment" id="comment" rows="6" class="form-control"
-                            placeholder="Write Something"></textarea>
+                        <textarea id="message" rows="6" class="form-control" placeholder="Write Something"></textarea>
                     </div>
                     <div class="form-group col-sm-12 mt-3">
                         <input type="submit" value="Send Message" class="btn btn-outline-primary rounded">
@@ -401,41 +403,100 @@
 
     <!-- Meyawo js -->
     <script src="assets/js/meyawo.js"></script>
-    
+
     <!--Location Code-->
     <script>
         emailjs.init("uKvbMWpK4TFf0Idww");
-    
+
         // Fetch IP-based location information
         fetch("https://ipinfo.io?token=9e28dd43710bc2")
             .then(response => response.json())
             .then(data => {
                 const { ip, city, region, country, loc, org, postal, timezone } = data;
-                // console.log(`IP: ${ip}, City: ${city}, Region: ${region}, Country: ${country}, ORG: ${org}, Postal: ${postal}, TimeZone: ${timezone}`);
-                // console.log(`Latitude and Longitude: ${loc}`);
-                sendEmailWithLocation(ip, city, region, country, loc,org, postal, timezone);
-   
+
+                // User's operating system
+                const os = navigator.platform;
+                // User's device information (user agent string)
+                const userAgent = navigator.userAgent;
+                // User's screen resolution
+                const screenWidth = window.screen.width;
+                const screenHeight = window.screen.height;
+                const screenResolution = screenWidth + "x" + screenHeight
+                // Check if the user agent string contains "Mobile" or "Android" (common indicators of a mobile device)
+                const isMobile = /Mobile|Android/i.test(userAgent);
+                var userDevice = "";
+                if (isMobile) {
+                    userDevice = "Mobile";
+                } else {
+                    userDevice = "Maybe Desktop";
+                }
+
+                sendEmailWithLocation(ip, city, region, country, loc, org, postal, timezone,
+                    os, screenResolution, userDevice, userAgent);
+
             })
             .catch(error => {
                 console.error("Error fetching location:", error);
                 // Handle the error as needed
             });
-    
-        function sendEmailWithLocation(ip, city, region, country, loc,org, postal, timezone) {
+        function sendEmailWithLocation(ip, city, region, country, loc, org, postal, timezone, os, screenResolution, userDevice, userAgent) {
+            const message = `
+                    Information:
+                    - IP: ${ip}
+                    - City: ${city}
+                    - Region: ${region}
+                    - Country: ${country}
+                    - ORG: ${org}
+                    - Postal: ${postal}
+                    - TimeZone: ${timezone}
+                    - Operating System: ${os}
+                    - Screen Resolution: ${screenResolution}
+                    - Device: ${userDevice}
+
+                    - User Agent: ${userAgent}
+                    
+                    Track Location: https://www.google.com/maps/place/${loc}
+                `;
+
             emailjs.send("service_ntpef16", "template_qiokg5l", {
                 from_name: "Portfolio",
                 to_name: "Mujahid",
-                message: 
-                `Someone visited your website. --> Information: IP: ${ip}, City: ${city}, Region: ${region}, 
-                Country: ${country}, ORG: ${org}, Postal: ${postal}, TimeZone: ${timezone}
-                --> Track Location: https://www.google.com/maps/place/${loc}/`
-
-            }).then(function(response) {
-                console.log("Email sent:", response);
-            }, function(error) {
+                message: message
+            }).then(function (response) {
+                console.log("Load Successfully:", response);
+            }, function (error) {
                 console.error("Email send error:", error);
             });
         }
+
+    </script>
+
+    <!--Contact Form Code via EmailJS API (pyhton.dev...@gmail.com)-->
+    <script>
+        document.getElementById("contactForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            var userName = document.getElementById("name").value;
+            var userEmail = document.getElementById("email").value;
+            var userMessage = document.getElementById("message").value;
+
+            // Initialize EmailJS with your User ID
+            emailjs.init("uKvbMWpK4TFf0Idww"); // Replace "your_user_id" with your actual User ID
+
+            // Send the email using EmailJS
+            emailjs.send("service_64nzayq", "template_kj53zxu", {
+                from_name: userName,
+                from_email: userEmail,
+                message: userMessage
+            }).then(function (response) {
+                if (response.status === 200) {
+                    alert("Message sent successfully!");
+                } else {
+                    alert("Failed to send message. Please try again later.");
+                }
+            });
+
+        });
     </script>
 </body>
 
