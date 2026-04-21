@@ -79,6 +79,14 @@
     opacity: 0.07;
   }
 
+  /* Live Terminal */
+  .live-terminal { border-color: var(--border-bright); transition: box-shadow 0.3s; }
+  .live-terminal:focus-within { box-shadow: 0 0 20px rgba(0,255,65,0.15), 0 0 1px var(--green); border-color: var(--green); }
+  .live-terminal input::placeholder { color: #003300; }
+  .live-terminal input:focus { color: var(--cyan); }
+  #connect-terminal .terminal-body a,
+  #whoami-terminal .terminal-body a { pointer-events: all; }
+
   /* Boot screen */
   #boot {
     position: fixed;
@@ -749,7 +757,7 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="#">MA<span>.</span>SEC</a>
+  <a class="nav-logo" href="#">Mujahid<span>></span></a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#skills">Skills</a></li>
@@ -807,24 +815,31 @@
     </div>
     <div class="about-grid">
       <div class="reveal">
-        <div class="terminal">
+        <div class="terminal live-terminal" id="whoami-terminal">
           <div class="terminal-bar">
             <div class="dot dot-red"></div>
             <div class="dot dot-yellow"></div>
             <div class="dot dot-green"></div>
-            <span>~ whoami.sh</span>
+            <span>~ whoami.sh — LIVE SESSION</span>
+            <span style="margin-left:auto;color:var(--green);animation:pulse 2s infinite;font-size:10px">● ONLINE</span>
           </div>
-          <div class="terminal-body">
+          <div class="terminal-body" id="whoami-output" style="min-height:180px;max-height:320px;overflow-y:auto;">
             <div><span class="prompt"></span><span class="hl">whoami</span></div>
             <div class="output">mujahid_ali</div>
             <div><span class="prompt"></span><span class="hl">cat /etc/about.conf</span></div>
             <div class="comment"># Cybersecurity Engineer | Ethical Hacker</div>
-            <div class="output">NAME=&quot;<span class="hl">Mujahid Ali</span>&quot;</div>
-            <div class="output">ROLE=&quot;<span class="hl">Cybersecurity Engineer</span>&quot;</div>
-            <div class="output">ORG=&quot;<span class="hl">Spatial Stack</span>&quot;</div>
-            <div class="output">EDU=&quot;<span class="hl">NED University, Karachi</span>&quot;</div>
-            <div class="output">FOCUS=&quot;<span class="hl">Threat Detection, SIEM, Linux</span>&quot;</div>
-            <div class="output">STATUS=&quot;<span class="hl-red">ACTIVE</span>&quot;</div>
+            <div class="output">NAME="<span class="hl">Mujahid Ali</span>"</div>
+            <div class="output">ROLE="<span class="hl">Cybersecurity Engineer</span>"</div>
+            <div class="output">LOC="<span class="hl">Birmingham, UK</span>"</div>
+            <div class="output">FOCUS="<span class="hl">Threat Detection, SIEM, Linux</span>"</div>
+            <div class="output">STATUS="<span class="hl-red">ACTIVE — HACKABLE</span>"</div>
+            <div class="output comment"># This terminal is LIVE. Try: help</div>
+          </div>
+          <div style="display:flex;align-items:center;padding:0.5rem 1.5rem 1rem;border-top:1px solid var(--border);gap:0.5rem;">
+            <span style="color:var(--green);font-size:13px;white-space:nowrap">root@mujahid:~$</span>
+            <input id="whoami-input" type="text" autocomplete="off" spellcheck="false"
+              style="flex:1;background:transparent;border:none;outline:none;color:var(--cyan);font-family:'Share Tech Mono',monospace;font-size:13px;caret-color:var(--green);"
+              placeholder="type a command..." />
           </div>
         </div>
         <div class="about-bio">
@@ -928,6 +943,37 @@
       <h2 class="section-title">Mission Log</h2>
     </div>
     <div class="timeline">
+      <!-- EDUCATION -->
+      <div class="timeline-item reveal">
+        <div class="timeline-dot" style="background:var(--cyan);box-shadow:0 0 8px var(--cyan)"></div>
+        <div class="job-company" style="color:var(--cyan)">University of Scotland — London Campus</div>
+        <div class="job-title">MSc Cyber Security</div>
+        <div class="job-date">// POSTGRADUATE · LONDON, UK</div>
+        <div class="job-desc">
+          Advanced postgraduate study in cybersecurity covering offensive and defensive security, digital forensics, incident response, network security, and secure software development. Built expertise in real-world threat modelling and enterprise-level security architecture.
+        </div>
+        <div class="job-tags">
+          <span class="tag">Cyber Security</span>
+          <span class="tag">Digital Forensics</span>
+          <span class="tag">Incident Response</span>
+          <span class="tag">Network Security</span>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot" style="background:var(--cyan);box-shadow:0 0 8px var(--cyan)"></div>
+        <div class="job-company" style="color:var(--cyan)">University of Lahore — Pakistan</div>
+        <div class="job-title">BSc Computer Science</div>
+        <div class="job-date">// UNDERGRADUATE · LAHORE, PAKISTAN</div>
+        <div class="job-desc">
+          Bachelor's degree in Computer Science covering algorithms, data structures, operating systems, databases, software engineering and networking. Foundation for hands-on cybersecurity practice and systems thinking.
+        </div>
+        <div class="job-tags">
+          <span class="tag">Computer Science</span>
+          <span class="tag">Networking</span>
+          <span class="tag">Software Engineering</span>
+          <span class="tag">Databases</span>
+        </div>
+      </div>
       <div class="timeline-item reveal">
         <div class="timeline-dot"></div>
         <div class="job-company">NCCS — NED University of Engineering &amp; Technology</div>
@@ -1052,8 +1098,15 @@
       <span class="section-num">06</span>
       <h2 class="section-title">Establish Link</h2>
     </div>
-    <div class="contact-grid">
+    <div class="contact-grid" style="align-items:start;">
       <div class="reveal">
+        <a class="contact-item" href="https://www.instagram.com/hellomujahid/" target="_blank">
+          <div class="contact-icon">ig</div>
+          <div>
+            <div class="contact-label">Instagram</div>
+            <div class="contact-value">@hellomujahid</div>
+          </div>
+        </a>
         <a class="contact-item" href="https://www.linkedin.com/in/hellomujahid/" target="_blank">
           <div class="contact-icon">in</div>
           <div>
@@ -1076,25 +1129,27 @@
           </div>
         </a>
       </div>
-      <div class="reveal">
-        <div class="terminal">
+      <div class="reveal" style="width:100%">
+        <div class="terminal live-terminal" id="connect-terminal">
           <div class="terminal-bar">
             <div class="dot dot-red"></div>
             <div class="dot dot-yellow"></div>
             <div class="dot dot-green"></div>
-            <span>~ connect.sh</span>
+            <span>~ connect.sh — LIVE SESSION</span>
+            <span style="margin-left:auto;color:var(--green);animation:pulse 2s infinite;font-size:10px">● ONLINE</span>
           </div>
-          <div class="terminal-body">
-            <div><span class="prompt"></span><span class="hl">ssh mujahid@spatialstack.io</span></div>
-            <div class="output">Connecting to host ...</div>
-            <div class="output">RSA key fingerprint: SHA256:xKp4...</div>
-            <div class="output"><span class="hl-red">Are you sure you want to continue?</span> (yes/no): <span class="hl">yes</span></div>
-            <div class="output">Welcome, Operator.</div>
-            <div class="output">Last login: Today from your-browser</div>
-            <div><span class="prompt"></span><span class="hl">cat mission_briefing.txt</span></div>
-            <div class="output comment"># Available for internships, freelance</div>
-            <div class="output comment"># security projects, and collaborations.</div>
-            <div class="output comment"># Let's build secure systems together.</div>
+          <div class="terminal-body" id="connect-output" style="min-height:220px;max-height:380px;overflow-y:auto;">
+            <div class="output" style="color:var(--cyan)">╔══════════════════════════════════════════════╗</div>
+            <div class="output" style="color:var(--cyan)">║   🔓 YOU CAN HACK MUJAHID WITH THIS TERMINAL ║</div>
+            <div class="output" style="color:var(--cyan)">╚══════════════════════════════════════════════╝</div>
+            <div class="output">Type <span class="hl">help</span> to see available commands.</div>
+            <div class="output comment"># Try: hack mujahid · hack camera · hack mujahid website · social · cv</div>
+          </div>
+          <div style="display:flex;align-items:center;padding:0.5rem 1.5rem 1rem;border-top:1px solid var(--border);gap:0.5rem;">
+            <span style="color:var(--green);font-size:13px;white-space:nowrap">root@mujahid:~$</span>
+            <input id="connect-input" type="text" autocomplete="off" spellcheck="false"
+              style="flex:1;background:transparent;border:none;outline:none;color:var(--cyan);font-family:'Share Tech Mono',monospace;font-size:13px;caret-color:var(--green);"
+              placeholder="type a command..." />
           </div>
         </div>
       </div>
@@ -1212,6 +1267,653 @@ const ham = document.getElementById('hamburger');
 const mob = document.getElementById('mobile-menu');
 ham.addEventListener('click', () => mob.classList.toggle('open'));
 function closeMobile() { mob.classList.remove('open'); }
+
+// ══════════════════════════════════════════
+//   LIVE TERMINAL ENGINE v2
+// ══════════════════════════════════════════
+
+const TERMINAL_DATA = {
+  name: 'Mujahid Ali',
+  role: 'Cybersecurity Engineer',
+  location: 'Birmingham, UK',
+  email: 'Mujahidx73@gmail.com',
+  phone: '+44 7823 441 096',
+  linkedin: 'linkedin.com/in/hellomujahid',
+  github: 'github.com/hellomujahid',
+  instagram: 'instagram.com/hellomujahid',
+  mapLink: 'https://www.google.com/maps/place/Birmingham,+UK',
+  cv: [
+    '╔══════════════════════════════════════════════════╗',
+    '║         CURRICULUM VITAE — MUJAHID ALI           ║',
+    '╠══════════════════════════════════════════════════╣',
+    '║  ROLE     : Cybersecurity Engineer               ║',
+    '║  LOCATION : Birmingham, UK                       ║',
+    '║  EMAIL    : Mujahidx73@gmail.com                 ║',
+    '║  PHONE    : +44 7823 441 096                     ║',
+    '╠══════════════════════════════════════════════════╣',
+    '║  EDUCATION                                       ║',
+    '║  • MSc Cyber Security                            ║',
+    '║    University of Scotland, London Campus         ║',
+    '║  • BSc Computer Science                          ║',
+    '║    University of Lahore, Pakistan                ║',
+    '╠══════════════════════════════════════════════════╣',
+    '║  EXPERIENCE                                      ║',
+    '║  • Cybersecurity Intern — NCCS, NED University   ║',
+    '║    Wazuh SIEM, FIM, Threat Detection              ║',
+    '║  • Cybersecurity Team Member — Spatial Stack     ║',
+    '║    Security Research & Ethical Hacking            ║',
+    '╠══════════════════════════════════════════════════╣',
+    '║  CERTIFICATIONS                                  ║',
+    '║  • Ethical Hacking Essentials (EHE)              ║',
+    '║  • Wazuh SIEM Lab Certification — NCCS           ║',
+    '║  • Linux System Administration                   ║',
+    '║  • Cybersecurity Career Pathway — Tech Secure    ║',
+    '╠══════════════════════════════════════════════════╣',
+    '║  SKILLS                                          ║',
+    '║  • Wazuh SIEM  • Threat Detection & Response     ║',
+    '║  • File Integrity Monitoring  • Linux Admin       ║',
+    '║  • Python  • Bash/Shell  • VirtualBox            ║',
+    '╚══════════════════════════════════════════════════╝',
+  ]
+};
+
+// ── Animated hack sequence ──────────────────────────
+async function runHackAnimation(outputEl, onDone) {
+  const sl = (ms) => new Promise(r => setTimeout(r, ms));
+  const append = (html, cls='output') => {
+    const d = document.createElement('div');
+    d.className = cls;
+    d.innerHTML = html;
+    outputEl.appendChild(d);
+    outputEl.scrollTop = outputEl.scrollHeight;
+    return d;
+  };
+
+  // Phase 1: Recon
+  append('');
+  append('<span style="color:#ff2e2e">╔══════════════════════════════════════════════════╗</span>');
+  append('<span style="color:#ff2e2e">║   ⚠  INITIATING TARGETED BREACH SEQUENCE  ⚠     ║</span>');
+  append('<span style="color:#ff2e2e">╚══════════════════════════════════════════════════╝</span>');
+  await sl(500);
+  append('');
+  append('# TARGET: <span style="color:#ff2e2e">mujahid@birmingham.uk</span> &nbsp; // THREAT LEVEL: MAXIMUM', 'output comment');
+  await sl(300);
+
+  // Fake IP scanning
+  append('');
+  append('<span style="color:var(--cyan)">[ PHASE 1 ]</span> Network Reconnaissance...');
+  await sl(200);
+  const fakeIPs = ['185.94.112.7','94.23.58.14','51.4.220.88','172.16.0.12','10.0.0.254'];
+  for (const ip of fakeIPs) {
+    const d = append(`  &nbsp;→ Probing <span style="color:var(--green-dim)">${ip}</span>...`);
+    await sl(180);
+    d.innerHTML = `  &nbsp;→ Probing <span style="color:var(--green-dim)">${ip}</span>... <span style="color:var(--green)">ALIVE</span>`;
+    await sl(80);
+  }
+  await sl(200);
+  append('  Scanning open ports... <span style="color:var(--cyan)">22 &nbsp;80 &nbsp;443 &nbsp;3000 &nbsp;8080 &nbsp;9200</span>');
+  await sl(400);
+  append('  SSH fingerprint: <span style="color:var(--cyan)">RSA-4096 / ED25519</span>');
+  await sl(300);
+  append('  OS fingerprint: <span style="color:var(--cyan)">MujahidOS 2.0.0 — Linux aarch64</span>');
+  await sl(400);
+
+  // Phase 2: Password cracking
+  append('');
+  append('<span style="color:var(--cyan)">[ PHASE 2 ]</span> Brute-Force SSH Credentials...');
+  await sl(200);
+  const passList = ['password123','admin','letmein','qwerty','1234','mujahid2024','cyber'];
+  for (const pw of passList) {
+    append(`  &nbsp;→ Trying: <span style="color:#ff2e2e44">${pw}</span>... <span style="color:#ff2e2e">FAILED</span>`);
+    await sl(150);
+  }
+  await sl(200);
+  const barEl = append('');
+  const steps = [
+    ['▓░░░░░░░░░░░░░░░░░░░','  4%'],['▓▓▓▓░░░░░░░░░░░░░░░░',' 18%'],
+    ['▓▓▓▓▓▓▓░░░░░░░░░░░░░',' 33%'],['▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░',' 49%'],
+    ['▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░',' 63%'],['▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░',' 78%'],
+    ['▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░',' 91%'],['▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓','100%']
+  ];
+  for (const [bar, pct] of steps) {
+    barEl.innerHTML = `  <span style="color:var(--green)">WORDLIST</span> [<span style="color:#ff2e2e">${bar}</span>] ${pct} &nbsp;<span style="color:var(--green-dim)">${Math.floor(Math.random()*8000+1000)} attempts/sec</span>`;
+    await sl(230);
+  }
+  await sl(200);
+  append('  <span style="color:var(--green)">✓ CREDENTIALS FOUND</span> &nbsp; <span style="color:#ff2e2e">user:mujahid</span> <span style="color:var(--cyan)">pass:••••••••</span>');
+  await sl(400);
+
+  // Phase 3: Exploitation
+  append('');
+  append('<span style="color:var(--cyan)">[ PHASE 3 ]</span> Exploiting CVE-2024-3094...');
+  await sl(200);
+  const exploitSteps = [
+    ['Uploading shellcode payload','UPLOADED'],
+    ['Bypassing firewall rules','BYPASSED'],
+    ['Exploiting XZ backdoor','EXPLOITED'],
+    ['Injecting reverse shell','INJECTED'],
+    ['Tunnelling through port 443','TUNNELLED'],
+    ['Disabling IDS/IPS sensors','BLINDED'],
+    ['Escalating privileges → <span style="color:#ff2e2e">root</span>','ROOT ✓'],
+  ];
+  for (const [msg, res] of exploitSteps) {
+    const d = append(`  &nbsp;→ ${msg}...`);
+    await sl(280);
+    d.innerHTML = `  &nbsp;→ ${msg}... <span style="color:var(--green)">${res}</span>`;
+    await sl(100);
+  }
+  await sl(300);
+
+  // Phase 4: Data exfil loader
+  append('');
+  append('<span style="color:var(--cyan)">[ PHASE 4 ]</span> Exfiltrating target data...');
+  await sl(200);
+  const exfilBar = append('');
+  const exfilSteps = [
+    ['████░░░░░░░░░░░░░░░░░░░░','18%','scanning /etc/passwd'],
+    ['████████░░░░░░░░░░░░░░░░','36%','reading /home/mujahid/'],
+    ['████████████░░░░░░░░░░░░','52%','dumping SSH keys'],
+    ['████████████████░░░░░░░░','68%','extracting contacts.db'],
+    ['████████████████████░░░░','84%','copying credentials.enc'],
+    ['████████████████████████','100%','DUMP COMPLETE'],
+  ];
+  for (const [bar, pct, label] of exfilSteps) {
+    exfilBar.innerHTML = `  <span style="color:#ff2e2e">EXFIL</span> [<span style="color:var(--cyan)">${bar}</span>] ${pct} &nbsp;<span style="color:var(--green-dim)">${label}</span>`;
+    await sl(280);
+  }
+  await sl(300);
+
+  // GLITCH FLASH — full screen
+  for (let i = 0; i < 5; i++) {
+    document.body.style.filter = `hue-rotate(${i*60}deg) brightness(${1.3+i*0.1}) contrast(1.2)`;
+    await sl(60);
+    document.body.style.filter = '';
+    await sl(40);
+  }
+
+  // Fake terminal flood
+  await sl(200);
+  append('');
+  const flood = [
+    'cat /etc/shadow | grep mujahid','mujahid:$6$rounds=5000$abc...ENCRYPTED','chmod 777 /root','echo "pwned" > /etc/motd',
+    'mkdir /backdoor && cp /bin/bash /backdoor/.hidden','crontab -e # persistence installed','iptables -F # firewall cleared',
+  ];
+  for (const line of flood) {
+    append(`<span style="color:var(--green-dim)">root@mujahid:~# </span><span style="color:#ff2e2e">${line}</span>`);
+    await sl(130);
+  }
+
+  await sl(400);
+
+  // Big ACCESS GRANTED banner
+  append('');
+  append('<span style="color:#ff2e2e">█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█</span>');
+  append('<span style="color:#ff2e2e">█                                                   █</span>');
+  append('<span style="color:#ff2e2e">█   🔓   A C C E S S &nbsp; G R A N T E D   🔓         █</span>');
+  append('<span style="color:#ff2e2e">█        ROOT SHELL ESTABLISHED · ALL DATA DUMPED   █</span>');
+  append('<span style="color:#ff2e2e">█                                                   █</span>');
+  append('<span style="color:#ff2e2e">█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█</span>');
+  await sl(300);
+
+  // Final glitch
+  document.body.style.filter = 'invert(1) hue-rotate(180deg)';
+  await sl(120);
+  document.body.style.filter = '';
+  await sl(80);
+  document.body.style.filter = 'brightness(2) contrast(1.5)';
+  await sl(80);
+  document.body.style.filter = '';
+
+  await sl(300);
+  append('');
+  append('<span style="color:var(--green);font-size:14px">🎉 GG — YOU JUST HACKED MUJAHID. HERE IS WHAT WE FOUND:</span>');
+  append('');
+  await sl(200);
+
+  onDone();
+}
+
+// ── Animated website hack mode ──────────────────────
+async function runWebsiteHack(outputEl) {
+  const sl = (ms) => new Promise(r => setTimeout(r, ms));
+  const append = (html, cls='output') => {
+    const d = document.createElement('div');
+    d.className = cls;
+    d.innerHTML = html;
+    outputEl.appendChild(d);
+    outputEl.scrollTop = outputEl.scrollHeight;
+  };
+
+  append('# Targeting: <span style="color:#ff2e2e">mujahid-portfolio.io</span>', 'output comment');
+  await sl(400);
+  append('Injecting DOM manipulation script...');
+  await sl(500);
+
+  const steps2 = ['░░░░░░░░░░░░░░░░░░░░  0%',
+                   '████░░░░░░░░░░░░░░░░ 20%',
+                   '████████░░░░░░░░░░░░ 40%',
+                   '████████████░░░░░░░░ 60%',
+                   '████████████████░░░░ 80%',
+                   '████████████████████ 100%'];
+  const barEl2 = document.createElement('div');
+  barEl2.className = 'output';
+  outputEl.appendChild(barEl2);
+  for (const s of steps2) {
+    barEl2.innerHTML = `<span style="color:#ff2e2e">INJECTING  </span> [${s}]`;
+    await sl(200);
+  }
+
+  await sl(300);
+  append('');
+  append('<span style="color:#ff2e2e">⚠  WEBSITE COMPROMISED — ENTERING EDIT MODE</span>');
+  append('<span style="color:var(--cyan)">You can now click any text on the page and edit it!</span>');
+  append('<span style="color:var(--cyan)">Changes are LOCAL only. Refresh to restore.</span>');
+  append('');
+  append('# Run <span style="color:var(--cyan)">restore website</span> to undo hack.', 'output comment');
+  await sl(300);
+
+  // Activate contenteditable on all text nodes + glitch banner
+  document.querySelectorAll('h1,h2,h3,p,.hero-name,.about-bio,.section-title,.job-title,.job-company,.job-desc,.project-name,.project-desc,.cert-name,.stat-num,.stat-label,.hero-title').forEach(el => {
+    el.contentEditable = 'true';
+    el.style.outline = '1px dashed #ff2e2e44';
+    el.style.cursor = 'text';
+  });
+
+  // Add hacked banner
+  const banner = document.createElement('div');
+  banner.id = 'hacked-banner';
+  banner.innerHTML = '⚠ THIS SITE HAS BEEN HACKED — EDIT MODE ACTIVE ⚠';
+  Object.assign(banner.style, {
+    position:'fixed', top:'55px', left:'0', right:'0', zIndex:'9000',
+    background:'#ff2e2e', color:'#000', textAlign:'center',
+    fontFamily:"'Share Tech Mono',monospace", fontSize:'13px',
+    padding:'8px', letterSpacing:'3px', fontWeight:'bold',
+    animation:'pulse 1s infinite'
+  });
+  document.body.appendChild(banner);
+
+  // Glitch the hero name
+  document.querySelectorAll('.glitch').forEach(g => {
+    g.style.color = '#ff2e2e';
+    g.style.textShadow = '2px 0 #00fff5, -2px 0 #ff2e2e';
+  });
+}
+
+function restoreWebsite(outputEl) {
+  document.querySelectorAll('[contenteditable]').forEach(el => {
+    el.removeAttribute('contenteditable');
+    el.style.outline = '';
+    el.style.cursor = '';
+  });
+  const banner = document.getElementById('hacked-banner');
+  if (banner) banner.remove();
+  document.querySelectorAll('.glitch').forEach(g => {
+    g.style.color = '';
+    g.style.textShadow = '';
+  });
+  const d = document.createElement('div');
+  d.className = 'output hl';
+  d.textContent = '✅ Website restored. All changes reverted.';
+  outputEl.appendChild(d);
+  outputEl.scrollTop = outputEl.scrollHeight;
+}
+
+// ── Camera hack with live Birmingham webcam ──────────
+async function runCameraHack(outputEl) {
+  const sl = (ms) => new Promise(r => setTimeout(r, ms));
+  const append = (html, cls='output') => {
+    const d = document.createElement('div');
+    d.className = cls;
+    d.innerHTML = html;
+    outputEl.appendChild(d);
+    outputEl.scrollTop = outputEl.scrollHeight;
+    return d;
+  };
+
+  append('');
+  append('# Scanning for unsecured CCTV nodes near Birmingham, UK...', 'output comment');
+  await sl(350);
+
+  const camNodes = [
+    ['CAM_BHAM_BULL_RING_01','192.168.12.44','RTSP/2.0'],
+    ['CAM_BHAM_NEW_ST_05','172.31.0.88','RTSP/2.0'],
+    ['CAM_BHAM_BROAD_ST_11','10.0.4.12','RTSP/2.0'],
+    ['CAM_BHAM_CITY_CTR_07','185.94.112.7','RTSP/2.0'],
+    ['CAM_BHAM_EDGBASTON_03','94.23.58.44','RTSP/2.0'],
+  ];
+
+  for (const [id, ip, proto] of camNodes) {
+    const d = append(`  &nbsp;→ <span style="color:var(--green-dim)">${id}</span> @ ${ip} [${proto}]`);
+    await sl(200);
+    d.innerHTML = `  &nbsp;→ <span style="color:var(--green-dim)">${id}</span> @ ${ip} [${proto}] &nbsp;<span style="color:var(--green)">FOUND</span>`;
+    await sl(80);
+  }
+
+  await sl(300);
+  append('');
+  append('Found <span style="color:#ff2e2e">5</span> exposed camera nodes. Selecting highest-quality feed...');
+  await sl(400);
+  append('Targeting: <span style="color:var(--cyan)">CAM_BHAM_CITY_CTR_07</span> — Birmingham City Centre 📡');
+  await sl(400);
+
+  // Connection progress
+  const connBar = append('');
+  const connSteps = [
+    ['▓░░░░░░░░░░░░░░░░░░░', ' 5%', 'SYN sent'],
+    ['▓▓▓▓░░░░░░░░░░░░░░░░','20%', 'handshake'],
+    ['▓▓▓▓▓▓▓▓░░░░░░░░░░░░','40%', 'auth bypass'],
+    ['▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░','60%', 'decrypting stream'],
+    ['▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░','80%', 'buffering feed'],
+    ['▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓','100%','CONNECTED ✓'],
+  ];
+  for (const [bar, pct, label] of connSteps) {
+    connBar.innerHTML = `  <span style="color:var(--green)">CONNECT</span> [<span style="color:var(--cyan)">${bar}</span>] ${pct} &nbsp;<span style="color:var(--green-dim)">${label}</span>`;
+    await sl(250);
+  }
+
+  await sl(300);
+  append('');
+  append('<span style="color:var(--cyan)">┌──────────────────────────────────────────────────┐</span>');
+  append('<span style="color:var(--cyan)">│  📡  LIVE FEED ESTABLISHED — Birmingham, UK  🇬🇧  │</span>');
+  append('<span style="color:var(--cyan)">│  CAM: City Centre · ENCRYPTED: NO · STATUS: LIVE │</span>');
+  append('<span style="color:var(--cyan)">└──────────────────────────────────────────────────┘</span>');
+  await sl(300);
+
+  // Embed a real public Birmingham webcam (earthcam / windy / publicly accessible)
+  const camWrapper = document.createElement('div');
+  camWrapper.style.cssText = 'margin:8px 0 8px 1rem;border:2px solid var(--cyan);position:relative;';
+
+  // Scanline overlay for cinematic effect
+  camWrapper.innerHTML = `
+    <div style="position:absolute;top:4px;left:8px;z-index:2;font-family:Share Tech Mono,monospace;font-size:11px;color:#ff2e2e;letter-spacing:2px;pointer-events:none">
+      ● REC &nbsp;&nbsp; CAM_BHAM_CITY_CTR_07 &nbsp;&nbsp; <span id="cam-time"></span>
+    </div>
+    <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,65,0.03) 3px,rgba(0,255,65,0.03) 4px);pointer-events:none;z-index:2"></div>
+    <iframe
+      src="https://www.windy.com/webcams/1559733871?Birmingham"
+      width="100%" height="220" frameborder="0"
+      style="display:block;filter:sepia(0.3) hue-rotate(90deg) saturate(0.7) brightness(0.9)"
+      allowfullscreen
+      title="Birmingham Live Webcam"
+    ></iframe>
+  `;
+  outputEl.appendChild(camWrapper);
+  outputEl.scrollTop = outputEl.scrollHeight;
+
+  // Live clock on the camera
+  const camTimeEl = camWrapper.querySelector('#cam-time');
+  const clockInterval = setInterval(() => {
+    if (camTimeEl) camTimeEl.textContent = new Date().toLocaleTimeString('en-GB');
+  }, 1000);
+  // Stop after 5 min automatically
+  setTimeout(() => clearInterval(clockInterval), 300000);
+
+  await sl(800);
+  append('');
+  append('📍 Camera location: <span style="color:var(--cyan)">Birmingham City Centre, West Midlands, UK</span>');
+  append('📡 Stream protocol: <span style="color:var(--green)">RTSP → HTTP-HLS (transcoded)</span>');
+  append(`🗺  <a href="${TERMINAL_DATA.mapLink}" target="_blank" style="color:var(--cyan);text-decoration:underline">View on Google Maps</a> &nbsp;|&nbsp; <a href="https://www.windy.com/webcams/1559733871" target="_blank" style="color:var(--cyan);text-decoration:underline">Open Full Screen ↗</a>`);
+  await sl(200);
+  append('');
+  append('# 🎥 Watching live. Mujahid is somewhere in this city...', 'output comment');
+}
+
+// ── Main command processor ───────────────────────────
+function processCommand(cmd, outputEl) {
+  const c = cmd.trim().toLowerCase();
+  const raw = cmd.trim();
+  if (!c) return { lines: [], async: false };
+
+  const lines = [];
+
+  if (c === 'help' || c === '--help' || c === '-h' || c === 'ls') {
+    lines.push({ t: 'hl', v: '┌─ AVAILABLE COMMANDS ────────────────────────────┐' });
+    lines.push({ t: 'out', v: '  whoami              — who is Mujahid?' });
+    lines.push({ t: 'out', v: '  location            — live location + map' });
+    lines.push({ t: 'out', v: '  contact             — phone number' });
+    lines.push({ t: 'out', v: '  email               — email address' });
+    lines.push({ t: 'out', v: '  cv / resume         — full CV' });
+    lines.push({ t: 'out', v: '  skills              — technical skills' });
+    lines.push({ t: 'out', v: '  social              — all social links (LinkedIn, GitHub, IG)' });
+    lines.push({ t: 'out', v: '  instagram / ig      — @hellomujahid on Instagram' });
+    lines.push({ t: 'out', v: '  status              — availability' });
+    lines.push({ t: 'out', v: '  hack mujahid        — 😈 breach the target' });
+    lines.push({ t: 'out', v: '  hack mujahid website — 🌐 deface the site' });
+    lines.push({ t: 'out', v: '  hack camera         — 📡 tap nearby CCTV' });
+    lines.push({ t: 'out', v: '  restore website     — ↩  undo the hack' });
+    lines.push({ t: 'out', v: '  ping / date / uname -a' });
+    lines.push({ t: 'out', v: '  clear               — clear terminal' });
+    lines.push({ t: 'hl', v: '└─────────────────────────────────────────────────┘' });
+
+  } else if (c === 'whoami' || c === 'who' || c === 'about') {
+    lines.push({ t: 'comment', v: '# Decrypting identity...' });
+    lines.push({ t: 'out', v: `NAME     : ${TERMINAL_DATA.name}` });
+    lines.push({ t: 'out', v: `ROLE     : ${TERMINAL_DATA.role}` });
+    lines.push({ t: 'out', v: `LOCATION : ${TERMINAL_DATA.location}` });
+    lines.push({ t: 'out', v: 'EDU      : MSc Cyber Security · BSc Computer Science' });
+    lines.push({ t: 'out', v: 'FOCUS    : Threat Detection · SIEM · Linux' });
+    lines.push({ t: 'hl',  v: 'STATUS   : ONLINE — AVAILABLE FOR HIRE' });
+
+  } else if (c === 'location' || c === 'loc' || c === 'where' || c.includes('where') || c.includes('living') || c.includes('live')) {
+    lines.push({ t: 'comment', v: '# Triangulating GPS coordinates...' });
+    lines.push({ t: 'out', v: 'CITY     : Birmingham' });
+    lines.push({ t: 'out', v: 'COUNTRY  : United Kingdom 🇬🇧' });
+    lines.push({ t: 'out', v: 'TIMEZONE : GMT+1 (BST)' });
+    lines.push({ t: 'out', v: 'COORDS   : 52.4862° N, 1.8904° W' });
+    lines.push({ t: 'map', v: `📍 GOOGLE MAPS: <a href="${TERMINAL_DATA.mapLink}" target="_blank" style="color:var(--cyan);text-decoration:underline">${TERMINAL_DATA.mapLink}</a>` });
+    lines.push({ t: 'hl', v: '▸ Click the link to open Birmingham on Google Maps' });
+
+  } else if (c === 'contact' || c === 'phone' || c === 'number' || c === 'tel' || c.includes('phone') || c.includes('number') || c.includes('call')) {
+    lines.push({ t: 'comment', v: '# Retrieving classified contact data...' });
+    lines.push({ t: 'out', v: '⚠  ACCESS GRANTED — CLASSIFIED DATA EXPOSED' });
+    lines.push({ t: 'hl', v: `📞 PHONE : ${TERMINAL_DATA.phone}` });
+    lines.push({ t: 'out', v: 'ENCRYPTED via RSA-4096 | Handle responsibly.' });
+
+  } else if (c === 'email' || c === 'mail' || c.includes('email')) {
+    lines.push({ t: 'comment', v: '# Fetching secure mailbox...' });
+    lines.push({ t: 'hl', v: `✉  EMAIL : ${TERMINAL_DATA.email}` });
+    lines.push({ t: 'out', v: `📎 MAILTO: <a href="mailto:${TERMINAL_DATA.email}" style="color:var(--cyan);text-decoration:underline">${TERMINAL_DATA.email}</a>` });
+
+  } else if ((c === 'cv' || c === 'resume' || c === 'cat cv.txt' || c === 'cat resume.txt') || (c.includes('resume') && !c.includes('hack'))) {
+    lines.push({ t: 'comment', v: '# Decrypting curriculum vitae...' });
+    TERMINAL_DATA.cv.forEach(l => lines.push({ t: 'cv', v: l }));
+    lines.push({ t: 'hl', v: '▸ For full PDF — email: ' + TERMINAL_DATA.email });
+
+  } else if (c === 'skills' || c === 'arsenal' || c === 'tools') {
+    lines.push({ t: 'comment', v: '# Loading skill modules...' });
+    lines.push({ t: 'hl', v: '── SECURITY OPS ──────────────────────' });
+    lines.push({ t: 'out', v: '  Wazuh SIEM           ████████████ 92%' });
+    lines.push({ t: 'out', v: '  Threat Detection     ███████████░ 88%' });
+    lines.push({ t: 'out', v: '  File Integrity Mon.  ████████████ 90%' });
+    lines.push({ t: 'hl', v: '── SYSTEMS ───────────────────────────' });
+    lines.push({ t: 'out', v: '  Linux Administration ████████████ 90%' });
+    lines.push({ t: 'out', v: '  Network Security     ██████████░░ 80%' });
+    lines.push({ t: 'out', v: '  VirtualBox / Labs    ███████████░ 88%' });
+    lines.push({ t: 'hl', v: '── PROGRAMMING ───────────────────────' });
+    lines.push({ t: 'out', v: '  Python Scripting     ██████████░░ 78%' });
+    lines.push({ t: 'out', v: '  Bash / Shell         ██████████░░ 82%' });
+
+  } else if (c === 'social' || c === 'links' || c === 'socials') {
+    lines.push({ t: 'comment', v: '# Fetching OSINT social intel...' });
+    lines.push({ t: 'hl', v: `🔗 LinkedIn  : <a href="https://${TERMINAL_DATA.linkedin}" target="_blank" style="color:var(--cyan);text-decoration:underline">${TERMINAL_DATA.linkedin}</a>` });
+    lines.push({ t: 'hl', v: `🐱 GitHub    : <a href="https://${TERMINAL_DATA.github}" target="_blank" style="color:var(--cyan);text-decoration:underline">${TERMINAL_DATA.github}</a>` });
+    lines.push({ t: 'hl', v: `📸 Instagram : <a href="https://${TERMINAL_DATA.instagram}" target="_blank" style="color:var(--cyan);text-decoration:underline">@hellomujahid</a>` });
+
+  } else if (c === 'instagram' || c === 'ig' || c.includes('instagram')) {
+    lines.push({ t: 'comment', v: '# Locating Instagram profile...' });
+    lines.push({ t: 'hl', v: `📸 Instagram : <a href="https://${TERMINAL_DATA.instagram}" target="_blank" style="color:var(--cyan);text-decoration:underline">@hellomujahid</a>` });
+
+  } else if (c === 'status' || c === 'available' || c === 'hire') {
+    lines.push({ t: 'comment', v: '# Checking operator availability...' });
+    lines.push({ t: 'hl', v: '✅ STATUS: ONLINE & AVAILABLE' });
+    lines.push({ t: 'out', v: 'OPEN FOR  : Internships, Freelance, Collaborations' });
+    lines.push({ t: 'out', v: 'EXPERTISE  : Cybersecurity, SIEM, Ethical Hacking' });
+    lines.push({ t: 'out', v: `CONTACT VIA: ${TERMINAL_DATA.email}` });
+
+  } else if (c === 'hack mujahid' || c === './hack.sh' || (c.startsWith('sudo hack') && !c.includes('website') && !c.includes('camera'))) {
+    return { lines: [], async: 'hack' };
+
+  } else if (c === 'hack mujahid website' || c === 'hack website' || c === './deface.sh') {
+    return { lines: [], async: 'website' };
+
+  } else if (c === 'hack camera' || c === 'hack cam' || c === 'camera' || c === './cam.sh') {
+    return { lines: [], async: 'camera' };
+
+  } else if (c === 'restore website' || c === 'restore' || c === 'undo hack') {
+    return { lines: [], async: 'restore' };
+
+  } else if (c === 'clear' || c === 'cls') {
+    return { lines: [{ t: 'clear', v: '' }], async: false };
+
+  } else if (c === 'exit' || c === 'logout' || c === 'quit') {
+    lines.push({ t: 'hl', v: 'Session terminated. Goodbye, operator.' });
+    lines.push({ t: 'comment', v: '# Connection closed. RSA keys wiped.' });
+
+  } else if (c === 'date' || c === 'time') {
+    lines.push({ t: 'out', v: new Date().toString() });
+
+  } else if (c === 'uname -a') {
+    lines.push({ t: 'out', v: 'MujahidOS 2.0.0 #1 SMP PREEMPT Birmingham UK aarch64 GNU/Linux' });
+
+  } else if (c === 'ping mujahid' || c === 'ping') {
+    lines.push({ t: 'comment', v: '# Pinging Mujahid...' });
+    lines.push({ t: 'out', v: '64 bytes from mujahid: icmp_seq=1 ttl=64 time=0.1 ms' });
+    lines.push({ t: 'out', v: '64 bytes from mujahid: icmp_seq=2 ttl=64 time=0.1 ms' });
+    lines.push({ t: 'hl', v: 'HOST IS ALIVE ✅' });
+
+  } else if (c === 'nmap' || c.startsWith('nmap')) {
+    lines.push({ t: 'comment', v: '# Running nmap scan...' });
+    lines.push({ t: 'out', v: 'Starting Nmap 7.94 on target mujahid-portfolio.io' });
+    lines.push({ t: 'out', v: 'PORT    STATE  SERVICE' });
+    lines.push({ t: 'out', v: '22/tcp  open   ssh' });
+    lines.push({ t: 'out', v: '80/tcp  open   http' });
+    lines.push({ t: 'out', v: '443/tcp open   https' });
+    lines.push({ t: 'hl', v: '3 open ports found.' });
+
+  } else {
+    lines.push({ t: 'red', v: `bash: ${raw}: command not found` });
+    lines.push({ t: 'comment', v: '# Type "help" to see all commands.' });
+  }
+
+  return { lines, async: false };
+}
+
+// ── Render lines ─────────────────────────────────────
+function appendLines(outputEl, lines) {
+  if (lines.length === 1 && lines[0].t === 'clear') {
+    outputEl.innerHTML = '<div class="output comment"># Terminal cleared. Type help for commands.</div>';
+    return;
+  }
+  lines.forEach((line, i) => {
+    setTimeout(() => {
+      const d = document.createElement('div');
+      let cls = 'output';
+      if (line.t === 'hl') cls = 'output hl';
+      else if (line.t === 'comment') cls = 'output comment';
+      else if (line.t === 'red') cls = 'output hl-red';
+      d.className = cls;
+      d.innerHTML = line.v;
+      outputEl.appendChild(d);
+      outputEl.scrollTop = outputEl.scrollHeight;
+    }, i * 40);
+  });
+}
+
+// ── Terminal setup ───────────────────────────────────
+function setupTerminal(inputId, outputId) {
+  const input = document.getElementById(inputId);
+  const output = document.getElementById(outputId);
+  if (!input || !output) return;
+
+  const history = [];
+  let hIdx = -1;
+  let busy = false;
+
+  input.addEventListener('keydown', async (e) => {
+    if (e.key === 'Enter') {
+      const cmd = input.value;
+      if (!cmd.trim() || busy) return;
+
+      // Echo command
+      const echo = document.createElement('div');
+      echo.innerHTML = `<span style="color:var(--green)">root@mujahid:~$</span> <span style="color:var(--cyan)">${cmd.replace(/</g,'&lt;')}</span>`;
+      output.appendChild(echo);
+      input.value = '';
+      history.unshift(cmd);
+      hIdx = -1;
+      output.scrollTop = output.scrollHeight;
+
+      const result = processCommand(cmd, output);
+
+      if (result.async === 'hack') {
+        busy = true;
+        input.placeholder = 'hacking...';
+        input.disabled = true;
+        await runHackAnimation(output, () => {
+          // Show details after animation
+          const details = [
+            { t: 'out', v: `📍 LOCATION : Birmingham, UK` },
+            { t: 'out', v: `📞 PHONE    : ${TERMINAL_DATA.phone}` },
+            { t: 'out', v: `✉  EMAIL    : ${TERMINAL_DATA.email}` },
+            { t: 'out', v: `📸 INSTAGRAM: <a href="https://${TERMINAL_DATA.instagram}" target="_blank" style="color:var(--cyan);text-decoration:underline">@hellomujahid</a>` },
+            { t: 'map', v: `🗺  MAP      : <a href="${TERMINAL_DATA.mapLink}" target="_blank" style="color:var(--cyan);text-decoration:underline">Open Birmingham on Google Maps</a>` },
+            { t: 'out', v: '' },
+            { t: 'comment', v: '# Now use this power wisely, operator.' },
+          ];
+          appendLines(output, details);
+          busy = false;
+          input.disabled = false;
+          input.placeholder = 'type a command...';
+          input.focus();
+        });
+
+      } else if (result.async === 'website') {
+        busy = true;
+        input.placeholder = 'hacking website...';
+        input.disabled = true;
+        await runWebsiteHack(output);
+        busy = false;
+        input.disabled = false;
+        input.placeholder = 'type a command...';
+        input.focus();
+
+      } else if (result.async === 'camera') {
+        busy = true;
+        input.placeholder = 'tapping camera...';
+        input.disabled = true;
+        await runCameraHack(output);
+        busy = false;
+        input.disabled = false;
+        input.placeholder = 'type a command...';
+        input.focus();
+
+      } else if (result.async === 'restore') {
+        restoreWebsite(output);
+
+      } else {
+        appendLines(output, result.lines);
+      }
+
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (hIdx < history.length - 1) { hIdx++; input.value = history[hIdx]; }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (hIdx > 0) { hIdx--; input.value = history[hIdx]; }
+      else { hIdx = -1; input.value = ''; }
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      const cmds = ['help','whoami','location','contact','email','cv','resume','skills','social','instagram','status','hack mujahid','hack mujahid website','hack camera','restore website','clear','exit','date','ping','nmap','uname -a'];
+      const match = cmds.find(c => c.startsWith(input.value.toLowerCase()));
+      if (match) input.value = match;
+    }
+  });
+
+  output.addEventListener('click', () => { if (!busy) input.focus(); });
+}
+
+setupTerminal('connect-input', 'connect-output');
+setupTerminal('whoami-input', 'whoami-output');
 </script>
 </body>
 </html>
