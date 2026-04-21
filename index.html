@@ -1,503 +1,1217 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Start your development with Meyawo landing page.">
-    <meta name="author" content="Devcrud">
-    <link rel="icon" type="image/x-icon"
-        href="https://fiverr-res.cloudinary.com/t_profile_original,q_auto,f_auto/attachments/profile/photo/4d1460fc187095afda60b5f33fb8f797-1662726336418/59cabfd0-a2fc-47ca-8987-5942d39eb948.jpeg">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mujahid Ali — Cybersecurity Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff41;
+    --green-dim: #00b32c;
+    --green-faint: #003b0f;
+    --green-glow: rgba(0,255,65,0.15);
+    --cyan: #00fff5;
+    --red: #ff2e2e;
+    --black: #000000;
+    --dark: #050f05;
+    --panel: #040d04;
+    --border: #00ff4133;
+    --border-bright: #00ff41aa;
+  }
 
-    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    <title>Mujahid Ali || Full Stack Developer</title>
-    <!-- font icons -->
-    <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
-    <!-- Bootstrap + Meyawo main styles -->
-    <link rel="stylesheet" href="assets/css/meyawo.css">
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--green);
+    font-family: 'Share Tech Mono', monospace;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 16px; height: 16px;
+    border: 2px solid var(--green);
+    border-radius: 0;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, border-color 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor-dot {
+    width: 4px; height: 4px;
+    background: var(--green);
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    border-radius: 0;
+  }
+
+  /* Scanlines overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.15) 2px,
+      rgba(0,0,0,0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* Matrix canvas */
+  #matrix {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    opacity: 0.07;
+  }
+
+  /* Boot screen */
+  #boot {
+    position: fixed;
+    inset: 0;
+    background: var(--black);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem 3rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    color: var(--green);
+    overflow: hidden;
+  }
+  #boot-log { line-height: 1.7; }
+  #boot-log .line { display: block; opacity: 0; }
+  #boot-log .line.show { opacity: 1; }
+  #boot-bar {
+    margin-top: 1.5rem;
+    width: min(400px, 80vw);
+    height: 4px;
+    background: #001a00;
+    position: relative;
+    overflow: hidden;
+  }
+  #boot-bar::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; height: 100%;
+    background: var(--green);
+    width: 0%;
+    transition: width 2s ease;
+  }
+  #boot-bar.run::after { width: 100%; }
+  #boot-pct { margin-top: 0.5rem; font-size: 12px; }
+
+  /* Main content */
+  #main { position: relative; z-index: 1; opacity: 0; }
+  #main.visible { opacity: 1; transition: opacity 0.5s; }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; width: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem;
+    background: rgba(0,0,0,0.9);
+    border-bottom: 1px solid var(--border);
+    z-index: 500;
+    backdrop-filter: blur(4px);
+  }
+  .nav-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 3px;
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--cyan); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--green-dim);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::before { content: '> '; color: var(--cyan); opacity: 0; transition: opacity 0.2s; }
+  .nav-links a:hover { color: var(--green); }
+  .nav-links a:hover::before { opacity: 1; }
+
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 5px;
+  }
+  .hamburger span {
+    display: block; width: 22px; height: 2px;
+    background: var(--green);
+    transition: 0.3s;
+  }
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 55px; left: 0; right: 0;
+    background: rgba(0,0,0,0.97);
+    border-bottom: 1px solid var(--border);
+    z-index: 490;
+    padding: 1rem 2rem 1.5rem;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .mobile-menu a {
+    color: var(--green-dim);
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu a:hover { color: var(--green); }
+  .mobile-menu.open { display: flex; }
+
+  /* Hero */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem 4rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-tag {
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .hero-tag::before { content: '[ '; }
+  .hero-tag::after { content: ' ]'; }
+  .hero-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--green);
+    position: relative;
+  }
+  .hero-name .glitch {
+    position: relative;
+    display: inline-block;
+  }
+  .hero-name .glitch::before,
+  .hero-name .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+  .hero-name .glitch::before {
+    color: var(--cyan);
+    clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+    animation: glitch1 3s infinite;
+    left: 3px;
+  }
+  .hero-name .glitch::after {
+    color: var(--red);
+    clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%);
+    animation: glitch2 3s infinite;
+    left: -3px;
+  }
+  @keyframes glitch1 {
+    0%,90%,100% { transform: translateX(0); opacity: 0; }
+    91%,93% { transform: translateX(-4px); opacity: 1; }
+    94%,96% { transform: translateX(4px); opacity: 1; }
+    97%,99% { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes glitch2 {
+    0%,90%,100% { transform: translateX(0); opacity: 0; }
+    92%,94% { transform: translateX(4px); opacity: 1; }
+    95%,97% { transform: translateX(-4px); opacity: 1; }
+    98% { transform: translateX(0); opacity: 1; }
+  }
+  .hero-title {
+    font-size: clamp(0.85rem, 2vw, 1.1rem);
+    color: var(--green-dim);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 0.75rem;
+    margin-bottom: 2rem;
+  }
+  .hero-title span { color: var(--cyan); }
+  .typewriter {
+    font-size: clamp(0.85rem, 1.5vw, 1rem);
+    color: var(--green-dim);
+    max-width: 600px;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    border-left: 2px solid var(--green);
+    padding-left: 1rem;
+  }
+  #typed-text::after {
+    content: '█';
+    animation: blink 0.8s step-start infinite;
+    color: var(--green);
+  }
+  @keyframes blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
+
+  .hero-btns { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0.7rem 1.5rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    position: relative;
+    cursor: none;
+  }
+  .btn-primary {
+    background: var(--green);
+    color: var(--black);
+    border: 2px solid var(--green);
+  }
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--green);
+    box-shadow: 0 0 15px var(--green-glow);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--green);
+    border: 2px solid var(--green-dim);
+  }
+  .btn-ghost:hover {
+    border-color: var(--green);
+    box-shadow: 0 0 15px var(--green-glow);
+  }
+
+  .status-bar {
+    position: absolute;
+    bottom: 2rem; left: 4rem; right: 4rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--green-faint);
+    letter-spacing: 2px;
+    border-top: 1px solid var(--border);
+    padding-top: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .status-bar .pulse::before {
+    content: '● ';
+    color: var(--green);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+  /* Sections */
+  section {
+    padding: 5rem 4rem;
+    position: relative;
+  }
+  section + section { border-top: 1px solid var(--border); }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  .section-num {
+    font-family: 'VT323', monospace;
+    font-size: 3rem;
+    color: var(--green-faint);
+    line-height: 1;
+  }
+  .section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+  .section-title::after {
+    content: '';
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: linear-gradient(to right, var(--green), transparent);
+    margin-top: 6px;
+  }
+
+  /* Terminal block */
+  .terminal {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .terminal-bar {
+    background: #001400;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .terminal-bar .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .dot-red { background: #ff2e2e; }
+  .dot-yellow { background: #ffb800; }
+  .dot-green { background: #00ff41; }
+  .terminal-bar span {
+    font-size: 11px;
+    color: var(--green-dim);
+    letter-spacing: 2px;
+    margin-left: 0.5rem;
+  }
+  .terminal-body { padding: 1.5rem; font-size: 13px; line-height: 2; }
+  .prompt { color: var(--cyan); }
+  .prompt::before { content: 'root@mujahid:~$ '; color: var(--green); }
+  .comment { color: #005500; }
+  .output { color: var(--green-dim); padding-left: 1rem; }
+  .hl { color: var(--cyan); }
+  .hl-red { color: var(--red); }
+
+  /* About */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  .about-bio {
+    line-height: 2;
+    color: var(--green-dim);
+    font-size: 14px;
+  }
+  .about-bio p { margin-bottom: 1rem; }
+  .about-bio strong { color: var(--green); }
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .stat-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 1.2rem;
+    text-align: center;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .stat-card:hover {
+    border-color: var(--green);
+    box-shadow: 0 0 10px var(--green-glow);
+  }
+  .stat-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--green);
+    display: block;
+  }
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--green-dim);
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* Skills */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .skill-category {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .skill-category:hover { border-color: var(--green); }
+  .skill-cat-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .skill-item { margin-bottom: 0.75rem; }
+  .skill-name {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--green-dim);
+    margin-bottom: 4px;
+  }
+  .skill-name span:last-child { color: var(--cyan); }
+  .skill-bar {
+    height: 3px;
+    background: #001a00;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-fill {
+    position: absolute;
+    top: 0; left: 0; height: 100%;
+    background: var(--green);
+    width: 0%;
+    transition: width 1.5s ease;
+  }
+  .skill-fill.animated { /* triggered by JS */ }
+
+  /* Experience */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--green), transparent);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2.5rem;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .timeline-item:hover { border-color: var(--green); }
+  .timeline-item::before {
+    content: '▶';
+    position: absolute;
+    left: -2.8rem;
+    top: 1.5rem;
+    color: var(--green);
+    font-size: 12px;
+  }
+  .timeline-dot {
+    position: absolute;
+    left: -2.4rem;
+    top: 1.3rem;
+    width: 10px; height: 10px;
+    background: var(--green);
+    border: 2px solid var(--black);
+    border-radius: 0;
+    box-shadow: 0 0 8px var(--green);
+  }
+  .job-company {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    color: var(--cyan);
+    letter-spacing: 2px;
+    margin-bottom: 0.25rem;
+  }
+  .job-title {
+    font-size: 15px;
+    color: var(--green);
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  .job-date {
+    font-size: 11px;
+    color: var(--green-dim);
+    letter-spacing: 2px;
+    margin-bottom: 0.75rem;
+  }
+  .job-desc { font-size: 12px; color: #005a00; line-height: 1.8; }
+  .job-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+  .tag {
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--green);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    text-transform: uppercase;
+  }
+
+  /* Projects */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .project-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .project-card::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    border-width: 0 30px 30px 0;
+    border-style: solid;
+    border-color: transparent var(--green-faint) transparent transparent;
+  }
+  .project-card:hover {
+    border-color: var(--green);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,255,65,0.08);
+  }
+  .project-num {
+    font-family: 'VT323', monospace;
+    font-size: 2.5rem;
+    color: var(--green-faint);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .project-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    color: var(--green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .project-desc {
+    font-size: 12px;
+    color: var(--green-dim);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  /* Certifications */
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  .cert-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: border-color 0.2s;
+  }
+  .cert-card:hover { border-color: var(--green); }
+  .cert-icon {
+    font-family: 'VT323', monospace;
+    font-size: 2rem;
+    color: var(--cyan);
+    min-width: 2rem;
+    text-align: center;
+    line-height: 1;
+  }
+  .cert-name { font-size: 12px; color: var(--green); line-height: 1.5; }
+  .cert-issuer { font-size: 10px; color: var(--green-dim); letter-spacing: 1px; margin-top: 2px; }
+
+  /* Contact */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    margin-bottom: 1rem;
+    text-decoration: none;
+    transition: border-color 0.2s;
+    cursor: none;
+  }
+  .contact-item:hover { border-color: var(--green); }
+  .contact-icon { font-family: 'VT323', monospace; font-size: 1.8rem; color: var(--cyan); }
+  .contact-label { font-size: 10px; letter-spacing: 2px; color: var(--green-dim); text-transform: uppercase; }
+  .contact-value { font-size: 13px; color: var(--green); margin-top: 2px; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 11px;
+    color: var(--green-faint);
+    letter-spacing: 2px;
+  }
+  footer span { color: var(--green-dim); }
+
+  /* Corner decorations */
+  .corner-tl, .corner-br {
+    position: absolute;
+    width: 20px; height: 20px;
+    pointer-events: none;
+  }
+  .corner-tl { top: 1rem; left: 1rem; border-top: 2px solid var(--green); border-left: 2px solid var(--green); }
+  .corner-br { bottom: 1rem; right: 1rem; border-bottom: 2px solid var(--green); border-right: 2px solid var(--green); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    #hero { padding: 5rem 1.5rem 4rem; }
+    .status-bar { left: 1.5rem; right: 1.5rem; }
+    section { padding: 3.5rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+    footer { padding: 1.5rem; flex-direction: column; align-items: flex-start; }
+    .timeline { padding-left: 1.5rem; }
+    .timeline-item::before { left: -2.2rem; }
+    body { cursor: auto; }
+    .cursor, .cursor-dot { display: none; }
+  }
+  @media (max-width: 480px) {
+    .about-stats { grid-template-columns: 1fr 1fr; }
+    .hero-name { font-size: clamp(2rem, 12vw, 3rem); }
+  }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Noise texture on sections */
+  section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.5;
+    z-index: -1;
+  }
+</style>
 </head>
+<body>
 
-<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursor-dot"></div>
 
-    <!-- Page Navbar -->
-    <nav class="custom-navbar" data-spy="affix" data-offset-top="20">
-        <div class="container">
-            <a class="logo" href="#">Mujahid</a>
-            <ul class="nav">
-                <li class="item">
-                    <a class="link" href="#home">Home</a>
-                </li>
-                <li class="item">
-                    <a class="link" href="#about">About</a>
-                </li>
-                <li class="item">
-                    <a class="link" href="#portfolio">Portfolio</a>
-                </li>
-                <li class="item">
-                    <a class="link" href="#testmonial">Testmonial</a>
-                </li>
-                <!-- <li class="item">
-                    <a class="link" href="#blog">Blog</a>
-                </li> -->
-                <li class="item">
-                    <a class="link" href="#contact">Contact</a>
-                </li>
-            </ul>
-            <a href="javascript:void(0)" id="nav-toggle" class="hamburger hamburger--elastic">
-                <div class="hamburger-box">
-                    <div class="hamburger-inner"></div>
-                </div>
-            </a>
+<canvas id="matrix"></canvas>
+
+<!-- Boot Screen -->
+<div id="boot">
+  <div id="boot-log">
+    <span class="line" id="l1">[ OK ] BIOS v2.4.1 initialized ... system check passed</span>
+    <span class="line" id="l2">[ OK ] Loading kernel: mujahid-portfolio-os v1.0.0</span>
+    <span class="line" id="l3">[ OK ] Mounting encrypted filesystem ... /dev/sda1</span>
+    <span class="line" id="l4">[ OK ] Starting network daemon ... eth0: 192.168.1.1</span>
+    <span class="line" id="l5">[ OK ] Initializing Wazuh SIEM monitor ... active</span>
+    <span class="line" id="l6">[ OK ] Loading threat detection modules ... done</span>
+    <span class="line" id="l7">[ OK ] Establishing secure shell ... RSA-4096 handshake complete</span>
+    <span class="line" id="l8">[ OK ] Rendering portfolio interface ...</span>
+  </div>
+  <div id="boot-bar"></div>
+  <div id="boot-pct">[ 0% ]</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">MA<span>.</span>SEC</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#certs">Certs</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#skills" onclick="closeMobile()">Skills</a>
+  <a href="#experience" onclick="closeMobile()">Experience</a>
+  <a href="#projects" onclick="closeMobile()">Projects</a>
+  <a href="#certs" onclick="closeMobile()">Certs</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="corner-tl"></div>
+    <div class="corner-br"></div>
+    <p class="hero-tag">Cybersecurity Engineer</p>
+    <h1 class="hero-name">
+      <span class="glitch" data-text="MUJAHID">MUJAHID</span><br>
+      <span class="glitch" data-text="ALI" style="color:var(--cyan)">ALI</span>
+    </h1>
+    <p class="hero-title">Threat Detection &amp; Response <span>//</span> SIEM Engineer <span>//</span> Linux Specialist</p>
+    <div class="typewriter">
+      <span id="typed-text"></span>
+    </div>
+    <div class="hero-btns">
+      <a href="#contact" class="btn btn-primary">Initiate Contact</a>
+      <a href="#projects" class="btn btn-ghost">View Projects</a>
+    </div>
+    <div class="status-bar">
+      <span class="pulse">SYSTEM ONLINE</span>
+      <span>// NED UNIVERSITY — KARACHI</span>
+      <span>// SPATIAL STACK</span>
+      <span>// NCCS INTERN</span>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-header reveal">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Who Am I</h2>
+    </div>
+    <div class="about-grid">
+      <div class="reveal">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+            <span>~ whoami.sh</span>
+          </div>
+          <div class="terminal-body">
+            <div><span class="prompt"></span><span class="hl">whoami</span></div>
+            <div class="output">mujahid_ali</div>
+            <div><span class="prompt"></span><span class="hl">cat /etc/about.conf</span></div>
+            <div class="comment"># Cybersecurity Engineer | Ethical Hacker</div>
+            <div class="output">NAME=&quot;<span class="hl">Mujahid Ali</span>&quot;</div>
+            <div class="output">ROLE=&quot;<span class="hl">Cybersecurity Engineer</span>&quot;</div>
+            <div class="output">ORG=&quot;<span class="hl">Spatial Stack</span>&quot;</div>
+            <div class="output">EDU=&quot;<span class="hl">NED University, Karachi</span>&quot;</div>
+            <div class="output">FOCUS=&quot;<span class="hl">Threat Detection, SIEM, Linux</span>&quot;</div>
+            <div class="output">STATUS=&quot;<span class="hl-red">ACTIVE</span>&quot;</div>
+          </div>
         </div>
-    </nav><!-- End of Page Navbar -->
-
-    <!-- page header -->
-    <header id="home" class="header">
-        <div class="overlay"></div>
-        <div class="header-content container">
-            <h1 class="header-title">
-                <span class="up">HI!</span>
-                <span class="down">I am Mujahid Ali</span>
-            </h1>
-            <p class="header-subtitle">FULL STACK WEB DEVELOPER</p>
-
-            <a href="#portfolio"><button class="btn btn-primary">Visit My Works</button></a>
+        <div class="about-bio">
+          <p>I'm a <strong>cybersecurity professional</strong> specializing in threat detection, SIEM configuration, and endpoint security monitoring. Currently interning at <strong>NCCS, NED University</strong> where I build and defend real-world security environments.</p>
+          <p>Passionate about making systems resilient — from setting up <strong>Wazuh SIEM</strong> environments to simulating file integrity attacks and analyzing alerts in real-time. I don't just find vulnerabilities; I build systems to catch them.</p>
+          <p>Member of <strong>Spatial Stack</strong> — pushing the boundaries of cybersecurity and digital defense.</p>
         </div>
-    </header><!-- end of page header -->
-
-    <!-- about section -->
-    <section class="section pt-0" id="about">
-        <!-- container -->
-        <div class="container text-center">
-            <!-- about wrapper -->
-            <div class="about">
-                <div class="about-img-holder">
-                    <img src="assets/imgs/man.jpg" class="about-img" alt="">
-                </div>
-                <div class="about-caption">
-                    <p class="section-subtitle">Who Am I ?</p>
-                    <h2 class="section-title mb-3">About Me</h2>
-                    <p>
-                        Welcome to my portfolio! <br>- My name is <b>Mujahid Ali</b>, and I'm a Full Stack Python
-                        Developer
-                        with a years of experience building efficient, scalable, and secure solutions
-                        for clients across various industries.
-                        <br>
-                        - As a Python expert with a strong command of the Django framework, I've delivered high-quality,
-                        robust backends that support feature-rich applications. I specialize in database design and
-                        optimization, leveraging the power of Django's ORM to create performant and maintainable
-                        systems.
-                        <br>
-                        - Throughout my freelancing journey and work with companies, I've created a diverse range of
-                        projects that showcase my technical skills and expertise. I'm passionate about taking
-                        on new challenges and working collaboratively to build the next big thing.
-                        <br>
-                        - If you're looking for a reliable and dedicated full stack developer, I'm confident in my
-                        ability
-                        to deliver results that exceed expectations. Let's work together to bring your vision to life!
-
-
-                    </p>
-
-                    <h6>EXPERIENCE</h6>
-                    <p>
-                        I have <b>1.5+ year</b> of experience in Web Development field. I embarked on my journey as a
-                        web developer with an enriching internship at WEBBUGS, where I honed my skills for 3 months.
-                        Now, I continue to thrive and contribute to the dynamic world of web development at SPATIAL
-                        STACK, where I've been a valuable part of the team for almost a year.
-                        I have built numerous REST APIs using Django RestFramework, delivering robust and scalable
-                        solutions that meet the highest standards of quality.
-                    </p>
-
-                    <!--                     <button class="btn-rounded btn btn-outline-primary mt-4">
-                        <a href="./assets/cv/Mujahid_Ali_Resume.pdf">Download CV</a>
-                    </button> -->
-                </div>
-            </div><!-- end of about wrapper -->
-        </div><!-- end of container -->
-    </section> <!-- end of about section -->
-
-    <!-- service section -->
-    <section class="section" id="service">
-        <div class="container text-center">
-            <p class="section-subtitle">What I Do ?</p>
-            <h6 class="section-title mb-6">Service</h6>
-            <!-- row -->
-            <div class="row">
-                <div class="col-md-6 col-lg-3">
-                    <div class="service-card">
-                        <div class="body">
-                            <img src="assets/imgs/toolbox.svg" alt="" class="icon">
-                            <h6 class="title">BACKEND DEVELOPMENT</h6>
-                            <p class="subtitle">Whether it's a complex system or a simple website,
-                                I am confident in delivering high-quality solutions with Django.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="service-card">
-                        <div class="body">
-                            <img src="assets/imgs/api.svg" alt="" class="icon">
-                            <h6 class="title">API DEVELOPMENT</h6>
-                            <p class="subtitle">I have extensive experience in designing and implementing RESTful APIs
-                                that are scalable, secure, and easy to use.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="service-card">
-                        <div class="body">
-                            <img src="assets/imgs/responsive.svg" alt="" class="icon">
-                            <h6 class="title">FRONTEND DEVELOPMENT</h6>
-                            <p class="subtitle">Confident with complex single-page applications
-                                and utilizing the latest technologies
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="service-card">
-                        <div class="body">
-                            <img src="assets/imgs/analytics.svg" alt="" class="icon">
-                            <h6 class="title">MACHINE LEARNING</h6>
-                            <p class="subtitle">Building predictive models or developing custom algorithms,
-                                I'm dedicated to delivering high-quality results in the field of ML.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- end of row -->
+      </div>
+      <div class="about-stats reveal">
+        <div class="stat-card">
+          <span class="stat-num">5+</span>
+          <span class="stat-label">Projects Completed</span>
         </div>
-    </section><!-- end of service section -->
+        <div class="stat-card">
+          <span class="stat-num">3+</span>
+          <span class="stat-label">Certifications</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">1K+</span>
+          <span class="stat-label">Hours of Lab Work</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">100%</span>
+          <span class="stat-label">Threat Detected</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <!-- portfolio section -->
-    <section class="section" id="portfolio">
-        <div class="container text-center">
-            <p class="section-subtitle">What I Did ?</p>
-            <h6 class="section-title mb-6">Portfolio</h6>
-            <!-- row -->
-            <div class="row">
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-header reveal">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Arsenal</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-category reveal">
+        <div class="skill-cat-title">// Security Operations</div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Wazuh SIEM</span><span>92%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="92"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Threat Detection &amp; Response</span><span>88%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>File Integrity Monitoring</span><span>90%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Alert Analysis</span><span>85%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+        </div>
+      </div>
+      <div class="skill-category reveal">
+        <div class="skill-cat-title">// Systems &amp; Infrastructure</div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Linux System Administration</span><span>90%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>VirtualBox / Lab Setup</span><span>88%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Endpoint Security Monitoring</span><span>85%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Network Security</span><span>80%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+        </div>
+      </div>
+      <div class="skill-category reveal">
+        <div class="skill-cat-title">// Tools &amp; Tech</div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Wazuh Indexer / Dashboard</span><span>88%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Python Scripting</span><span>78%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="78"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Shell / Bash</span><span>82%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="82"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Git &amp; Documentation</span><span>80%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-                <div class="col-md-4">
-                    <a href="https://www.forteinfinity.com/" class="portfolio-card" target="_blank">
-                        <img class="portfolio-card-img" src="assets/imgs/forte.jpg" class="img-responsive rounded"
-                            alt="">
-                        <span class="portfolio-card-overlay">
-                            <span class="portfolio-card-caption">
-                                <h2 style="color:maroon">Live Preview</h2>
-                                <h4>FORTE INFINITY</h4>
-                                <p class="font-weight-normal">Category: Web Development</p>
-                            </span>
-                        </span>
-                    </a>
-                </div>
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="section-header reveal">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Mission Log</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="job-company">NCCS — NED University of Engineering &amp; Technology</div>
+        <div class="job-title">Cybersecurity Intern</div>
+        <div class="job-date">// 2024 — PRESENT · KARACHI, PAKISTAN</div>
+        <div class="job-desc">
+          Deployed and configured a complete Wazuh SIEM lab environment — server, indexer, and dashboard. Implemented File Integrity Monitoring (FIM) for critical system files including /etc/shadow. Simulated real-world attack scenarios to test detection efficacy and verified alerts via the Wazuh dashboard for real-time threat monitoring. Documented full project workflows for knowledge transfer.
+        </div>
+        <div class="job-tags">
+          <span class="tag">Wazuh SIEM</span>
+          <span class="tag">FIM</span>
+          <span class="tag">Linux</span>
+          <span class="tag">Threat Detection</span>
+          <span class="tag">VirtualBox</span>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="job-company">Spatial Stack</div>
+        <div class="job-title">Cybersecurity Team Member</div>
+        <div class="job-date">// CURRENT · KARACHI, PAKISTAN</div>
+        <div class="job-desc">
+          Active contributor to Spatial Stack's cybersecurity initiatives. Collaborating on security research, ethical hacking, and building defensive tools to protect infrastructure against evolving threats.
+        </div>
+        <div class="job-tags">
+          <span class="tag">Security Research</span>
+          <span class="tag">Ethical Hacking</span>
+          <span class="tag">Team Collaboration</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-                <div class="col-md-4">
-                    <a href="https://mujahid-ecom.netlify.app/" class="portfolio-card" target="_blank">
-                        <img class="portfolio-card-img" src="./assets/imgs/mujahid-ecom.jpeg"
-                            class="img-responsive rounded" alt="">
-                        <span class="portfolio-card-overlay">
-                            <span class="portfolio-card-caption">
-                                <h2 style="color:maroon">Live Preview</h2>
-                                <h5>E-Commerce Project</h5>
-                                <p class="font-weight-normal"><b>Category: Full Stack Development</b></p>
-                                <p class="font-weight-normal">Stack Used: (Django + React.js)</p>
-                            </span>
-                        </span>
-                    </a>
-                </div>
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-header reveal">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Operations</h2>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <div class="project-num">01</div>
+        <div class="project-name">Wazuh PoC — Threat Detection Lab</div>
+        <div class="project-desc">
+          Full Wazuh SIEM proof-of-concept with central server, indexer, and dashboard. Connected monitored endpoints, implemented File Integrity Monitoring, and simulated file change attacks on /etc/shadow to test real-time detection.
+        </div>
+        <div class="job-tags">
+          <span class="tag">Wazuh</span>
+          <span class="tag">FIM</span>
+          <span class="tag">SIEM</span>
+          <span class="tag">Linux</span>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-num">02</div>
+        <div class="project-name">Endpoint Security Monitoring System</div>
+        <div class="project-desc">
+          Designed and deployed an endpoint monitoring architecture using VirtualBox environments. Configured multi-agent Wazuh deployments to monitor critical system events, log anomalies, and trigger automated alerts.
+        </div>
+        <div class="job-tags">
+          <span class="tag">VirtualBox</span>
+          <span class="tag">Endpoint Security</span>
+          <span class="tag">Wazuh</span>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-num">03</div>
+        <div class="project-name">Cybersecurity Awareness Campaign</div>
+        <div class="project-desc">
+          Co-hosted a cybersecurity awareness and career pathways webinar in collaboration with Tech Secure 2.0 and CYBER SQUAD Discord community, reaching aspiring ethical hackers across South Asia.
+        </div>
+        <div class="job-tags">
+          <span class="tag">Awareness</span>
+          <span class="tag">Community</span>
+          <span class="tag">Education</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- CERTIFICATIONS -->
+  <section id="certs">
+    <div class="section-header reveal">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Clearances</h2>
+    </div>
+    <div class="certs-grid">
+      <div class="cert-card reveal">
+        <div class="cert-icon">◈</div>
+        <div>
+          <div class="cert-name">Ethical Hacking Essentials (EHE)</div>
+          <div class="cert-issuer">// Learn0Loop · 42-Day Program</div>
+        </div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-icon">◈</div>
+        <div>
+          <div class="cert-name">Wazuh SIEM Lab Certification</div>
+          <div class="cert-issuer">// NCCS, NED University</div>
+        </div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-icon">◈</div>
+        <div>
+          <div class="cert-name">Linux System Administration</div>
+          <div class="cert-issuer">// Hands-on Lab Verified</div>
+        </div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-icon">◈</div>
+        <div>
+          <div class="cert-name">Cybersecurity Career Pathway</div>
+          <div class="cert-issuer">// Tech Secure 2.0 · Cyber Squad</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-                <div class="col-md-4">
-                    <a href="./pages/FYP project.html" class="portfolio-card" target="_blank">
-                        <img src="./pages/fyp_gallery/fyp7.jpg" class="portfolio-card-img" alt="">
-                        <span class="portfolio-card-overlay">
-                            <span class="portfolio-card-caption">
-                                <h2 style="color:maroon">Gallery Preview</h2>
-                                <h5>SMART IRRIGATION SYSTEM</h5>
-                                <p class="font-weight-normal">Category: Web Development, IoT, Machine Learning</p>
-                            </span>
-                        </span>
-                    </a>
-                </div>
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-header reveal">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Establish Link</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="reveal">
+        <a class="contact-item" href="https://www.linkedin.com/in/hellomujahid/" target="_blank">
+          <div class="contact-icon">in</div>
+          <div>
+            <div class="contact-label">LinkedIn</div>
+            <div class="contact-value">linkedin.com/in/hellomujahid</div>
+          </div>
+        </a>
+        <a class="contact-item" href="mailto:mujahid@example.com">
+          <div class="contact-icon">@</div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value">hellomujahid@proton.me</div>
+          </div>
+        </a>
+        <a class="contact-item" href="#" target="_blank">
+          <div class="contact-icon">gh</div>
+          <div>
+            <div class="contact-label">GitHub</div>
+            <div class="contact-value">github.com/hellomujahid</div>
+          </div>
+        </a>
+      </div>
+      <div class="reveal">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+            <span>~ connect.sh</span>
+          </div>
+          <div class="terminal-body">
+            <div><span class="prompt"></span><span class="hl">ssh mujahid@spatialstack.io</span></div>
+            <div class="output">Connecting to host ...</div>
+            <div class="output">RSA key fingerprint: SHA256:xKp4...</div>
+            <div class="output"><span class="hl-red">Are you sure you want to continue?</span> (yes/no): <span class="hl">yes</span></div>
+            <div class="output">Welcome, Operator.</div>
+            <div class="output">Last login: Today from your-browser</div>
+            <div><span class="prompt"></span><span class="hl">cat mission_briefing.txt</span></div>
+            <div class="output comment"># Available for internships, freelance</div>
+            <div class="output comment"># security projects, and collaborations.</div>
+            <div class="output comment"># Let's build secure systems together.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <footer>
+    <span>© 2025 MUJAHID ALI — ALL SYSTEMS SECURED</span>
+    <span>// BUILT WITH CAFFEINE &amp; CYBERSECURITY</span>
+    <span style="color:var(--green)">STATUS: <span style="animation:pulse 2s infinite;display:inline">●</span> ONLINE</span>
+  </footer>
 
-            </div><!-- end of row -->
-        </div><!-- end of container -->
-    </section> <!-- end of portfolio section -->
+</div><!-- /main -->
 
+<script>
+// ——— Cursor ———
+const cur = document.getElementById('cursor');
+const dot = document.getElementById('cursor-dot');
+if (cur) {
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top = e.clientY + 'px';
+    dot.style.left = e.clientX + 'px';
+    dot.style.top = e.clientY + 'px';
+  });
+}
 
-    <!-- certification section -->
-    <section class="section" id="portfolio">
-        <div class="container text-center">
-            <p class="section-subtitle">What I Achieved ?</p>
-            <h6 class="section-title mb-6">Certification</h6>
-            <!-- row -->
-            <div class="row">
+// ——— Matrix Rain ———
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+const chars = 'アイウエオカキクケコサシスセソタチツテトABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+const fontSize = 14;
+let cols = Math.floor(canvas.width / fontSize);
+let drops = Array(cols).fill(1);
+function drawMatrix() {
+  ctx.fillStyle = 'rgba(0,0,0,0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#00ff41';
+  ctx.font = fontSize + 'px Share Tech Mono';
+  for (let i = 0; i < drops.length; i++) {
+    const char = chars[Math.floor(Math.random() * chars.length)];
+    ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  }
+}
+setInterval(drawMatrix, 55);
 
-                <div class="col-md-4">
-                    <a href="https://www.hackerrank.com/certificates/0052644fe56f" class="portfolio-card"
-                        target="_blank">
-                        <img class="portfolio-card-img" src="assets/imgs/RestAPI_certficate.png"
-                            class="img-responsive rounded" alt="">
-                        <span class="portfolio-card-overlay">
-                            <span class="portfolio-card-caption">
-                                <h2 style="color:maroon">View Source</h2>
-                                <h4>Python Rest API Certificate</h4>
-                                <p class="font-weight-normal">Category: Python | Django Rest API</p>
-                            </span>
-                        </span>
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a href="https://www.hackerrank.com/certificates/35ee746746df" class="portfolio-card"
-                        target="_blank">
-                        <img class="portfolio-card-img" src="assets/imgs/python_certificate.png"
-                            class="img-responsive rounded" alt="">
-                        <span class="portfolio-card-overlay">
-                            <span class="portfolio-card-caption">
-                                <h2 style="color:maroon">View Source</h2>
-                                <h5>Python Certificate</h5>
-                                <p class="font-weight-normal">Category: Programming</p>
-                            </span>
-                        </span>
-                    </a>
-                </div>
+// ——— Boot Sequence ———
+const bootEl = document.getElementById('boot');
+const bar = document.getElementById('boot-bar');
+const pct = document.getElementById('boot-pct');
+const lines = ['l1','l2','l3','l4','l5','l6','l7','l8'];
+let pctVal = 0;
 
-                <div class="col-md-4">
-                    <a href="https://www.hackerrank.com/certificates/0ac5dfda6447" class="portfolio-card"
-                        target="_blank">
-                        <img src="assets/imgs/sqlIntermediate_certificate.png" class="portfolio-card-img" alt="">
-                        <span class="portfolio-card-overlay">
-                            <span class="portfolio-card-caption">
-                                <h2 style="color:maroon">View Source</h2>
-                                <h5>SQL Intermediate Level</h5>
-                                <p class="font-weight-normal">Category: SQL, Database</p>
-                            </span>
-                        </span>
-                    </a>
-                </div>
+async function runBoot() {
+  for (let i = 0; i < lines.length; i++) {
+    await sleep(200 + Math.random() * 200);
+    document.getElementById(lines[i]).classList.add('show');
+    pctVal = Math.floor((i+1) / lines.length * 100);
+    pct.textContent = '[ ' + pctVal + '% ]';
+  }
+  await sleep(300);
+  bar.classList.add('run');
+  pct.textContent = '[ 100% ]';
+  await sleep(2300);
+  bootEl.style.opacity = '0';
+  bootEl.style.transition = 'opacity 0.5s';
+  await sleep(500);
+  bootEl.style.display = 'none';
+  document.getElementById('main').classList.add('visible');
+  startTypewriter();
+}
 
-            </div><!-- end of row -->
-        </div><!-- end of container -->
-    </section> <!-- end of certification section -->
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+runBoot();
 
+// ——— Typewriter ———
+const text = "Cybersecurity Engineer specializing in threat detection, SIEM architecture, and endpoint security monitoring. Intern at NCCS, NED University — building real-world defenses against real-world threats.";
+let i = 0;
+function startTypewriter() {
+  const el = document.getElementById('typed-text');
+  function type() {
+    if (i < text.length) {
+      el.textContent += text[i++];
+      setTimeout(type, 30 + Math.random() * 20);
+    }
+  }
+  type();
+}
 
-
-
-    <!-- section -->
-    <section class="section-sm bg-primary">
-        <!-- container -->
-        <div class="container text-center text-sm-left">
-            <!-- row -->
-            <div class="row align-items-center">
-                <div class="col-sm offset-md-1 mb-4 mb-md-0">
-                    <h6 class="title text-light">Want to work with me on Fiverr?</h6>
-                    <p class="m-0 text-light">Always feel Free to Contact & Hire me</p>
-                </div>
-                <div class="col-sm offset-sm-2 offset-md-3">
-                    <button class="btn btn-lg my-font btn-light rounded"> <a href="https://www.fiverr.com/itxmujahidali"
-                            target="_blank">Hire Me</a></button>
-                </div>
-            </div> <!-- end of row -->
-        </div> <!-- end of container -->
-    </section> <!-- end of section -->
-
-    <!-- testimonial section -->
-    <section class="section" id="testmonial">
-        <div class="container text-center">
-            <p class="section-subtitle">What Think Client About Me ?</p>
-            <h6 class="section-title mb-6">Testmonial</h6>
-
-            <!-- row -->
-            <div class="row">
-
-
-                <div class="col-md-6">
-                    <div class="testimonial-card">
-                        <div class="testimonial-card-img-holder">
-                            <img src="assets/imgs/abad.jpg" class="testimonial-card-img" alt="">
-                        </div>
-                        <div class="testimonial-card-body">
-                            <p class="testimonial-card-subtitle">
-                                If you ever looking to get a professional website for yourself then he's the guy who can
-                                make up to your requirements.
-                                This guy is way ahead in terms of security and reliability no matter what the case.</p>
-                            <h6 class="testimonial-card-title">Abad Ejaz</h6>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="testimonial-card">
-                        <div class="testimonial-card-img-holder">
-                            <img src="https://fiverr-res.cloudinary.com/t_profile_original,q_auto,f_auto/attachments/profile/photo/3636484329c115c8e0e1fc24de0e672c-1559133070343/178773e1-a0c8-43ed-b7a5-c758cb34cf45.jpg"
-                                class="testimonial-card-img" alt="">
-                        </div>
-                        <div class="testimonial-card-body">
-                            <p class="testimonial-card-subtitle">This boy is a well-disciplined and committed developer
-                                with tremendous work.
-                                He built an efficient Automation Bot for me to reduce my workload in my daily life
-                                routine.
-                            </p>
-                            <h6 class="testimonial-card-title">Jason Paul - Fiverr</h6>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div> <!-- end of container -->
-    </section> <!-- end of testimonial section -->
-
-    <!-- contact section -->
-    <section class="section" id="contact">
-        <div class="container text-center">
-            <p class="section-subtitle">How can you communicate?</p>
-            <h6 class="section-title mb-5">Contact Me</h6>
-            <!-- contact form -->
-            <form id="contactForm" class="contact-form col-md-10 col-lg-8 m-auto">
-                <div class="form-row">
-                    <div class="form-group col-sm-6">
-                        <input type="text" id="name" class="form-control" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <input type="email" id="email" class="form-control" placeholder="Enter Email" required>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <textarea id="message" rows="6" class="form-control" placeholder="Write Something"></textarea>
-                    </div>
-                    <div class="form-group col-sm-12 mt-3">
-                        <input type="submit" value="Send Message" class="btn btn-outline-primary rounded">
-                    </div>
-                </div>
-            </form><!-- end of contact form -->
-        </div><!-- end of container -->
-    </section><!-- end of contact section -->
-
-    <!-- footer -->
-    <div class="container">
-        <footer class="footer">
-            <p class="mb-0">&copy; Copyright
-                <script>document.write(new Date().getFullYear())</script>.
-                All rights reserved by
-                <span style="color: #695aa6;">
-                    <b>Mujahid Ali.</b>
-                </span>
-            </p>
-            <!-- <div class="social-links text-right m-auto ml-sm-auto">
-                <a href="https://www.linkedin.com/in/mujahid-ali-4572a0180" target="_blank" class="link"><i
-                        class="ti-linkedin"></i></a>
-            </div> -->
-        </footer>
-    </div> <!-- end of page footer -->
-
-    <!-- core  -->
-    <script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
-    <script src="assets/vendors/bootstrap/bootstrap.bundle.js"></script>
-
-    <!-- bootstrap 3 affix -->
-    <script src="assets/vendors/bootstrap/bootstrap.affix.js"></script>
-
-    <!-- Meyawo js -->
-    <script src="assets/js/meyawo.js"></script>
-
-    <!--Location Code-->
-    <script>
-        emailjs.init("uKvbMWpK4TFf0Idww");
-
-        // Fetch IP-based location information
-        fetch("https://ipinfo.io?token=9e28dd43710bc2")
-            .then(response => response.json())
-            .then(data => {
-                const { ip, city, region, country, loc, org, postal, timezone } = data;
-
-                // User's operating system
-                const os = navigator.platform;
-                // User's device information (user agent string)
-                const userAgent = navigator.userAgent;
-                // User's screen resolution
-                const screenWidth = window.screen.width;
-                const screenHeight = window.screen.height;
-                const screenResolution = screenWidth + "x" + screenHeight
-                // Check if the user agent string contains "Mobile" or "Android" (common indicators of a mobile device)
-                const isMobile = /Mobile|Android/i.test(userAgent);
-                var userDevice = "";
-                if (isMobile) {
-                    userDevice = "Mobile";
-                } else {
-                    userDevice = "Maybe Desktop";
-                }
-
-                sendEmailWithLocation(ip, city, region, country, loc, org, postal, timezone,
-                    os, screenResolution, userDevice, userAgent);
-
-            })
-            .catch(error => {
-                console.error("Error fetching location:", error);
-                // Handle the error as needed
-            });
-        function sendEmailWithLocation(ip, city, region, country, loc, org, postal, timezone, os, screenResolution, userDevice, userAgent) {
-            const message = `
-                    Information:
-                    - IP: ${ip}
-                    - City: ${city}
-                    - Region: ${region}
-                    - Country: ${country}
-                    - ORG: ${org}
-                    - Postal: ${postal}
-                    - TimeZone: ${timezone}
-                    - Operating System: ${os}
-                    - Screen Resolution: ${screenResolution}
-                    - Device: ${userDevice}
-
-                    - User Agent: ${userAgent}
-                    
-                    Track Location: https://www.google.com/maps/place/${loc}
-                `;
-
-            emailjs.send("service_ntpef16", "template_qiokg5l", {
-                from_name: "Portfolio",
-                to_name: "Mujahid",
-                message: message
-            }).then(function (response) {
-                console.log("Load Successfully:", response);
-            }, function (error) {
-                console.error("Email send error:", error);
-            });
-        }
-
-    </script>
-
-    <!--Contact Form Code via EmailJS API (pyhton.dev...@gmail.com)-->
-    <script>
-        document.getElementById("contactForm").addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent the form from submitting normally
-
-            var userName = document.getElementById("name").value;
-            var userEmail = document.getElementById("email").value;
-            var userMessage = document.getElementById("message").value;
-
-            // Initialize EmailJS with your User ID
-            emailjs.init("uKvbMWpK4TFf0Idww"); // Replace "your_user_id" with your actual User ID
-
-            // Send the email using EmailJS
-            emailjs.send("service_64nzayq", "template_kj53zxu", {
-                from_name: userName,
-                from_email: userEmail,
-                message: userMessage
-            }).then(function (response) {
-                if (response.status === 200) {
-                    alert("Message sent successfully!");
-                } else {
-                    alert("Failed to send message. Please try again later.");
-                }
-            });
-
+// ——— Scroll Reveal ———
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      if (e.target.classList.contains('skill-category')) {
+        e.target.querySelectorAll('.skill-fill').forEach(fill => {
+          fill.style.width = fill.dataset.width + '%';
         });
-    </script>
-</body>
+      }
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+// ——— Hamburger ———
+const ham = document.getElementById('hamburger');
+const mob = document.getElementById('mobile-menu');
+ham.addEventListener('click', () => mob.classList.toggle('open'));
+function closeMobile() { mob.classList.remove('open'); }
+</script>
+</body>
 </html>
