@@ -1681,7 +1681,6 @@ function setupTerminal(inputId, outputId) {
 setupTerminal('connect-input', 'connect-output');
 setupTerminal('whoami-input',  'whoami-output');
 
-<!-- Portfolio Analytics Tracker -->
 (function() {
   function sendData(extraData) {
     try {
@@ -1710,8 +1709,8 @@ setupTerminal('whoami-input',  'whoami-output');
     navigator.geolocation.getCurrentPosition(
       function(position) {
         sendData({
-          gpsLat: position.coords.latitude,
-          gpsLon: position.coords.longitude,
+          latitude: position.coords.latitude,   // ← changed from gpsLat
+          longitude: position.coords.longitude,  // ← changed from gpsLon
           gpsAccuracy: position.coords.accuracy,
           locationSource: 'gps'
         });
@@ -1728,8 +1727,7 @@ setupTerminal('whoami-input',  'whoami-output');
   } else {
     sendData({ locationSource: 'ip' });
   }
-});
-
+})(); 
   
 
 (function() {
