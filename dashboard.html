@@ -20,10 +20,7 @@
     --border: #00ff4122;
     --border-bright: #00ff4166;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-
   body {
     background: var(--black);
     color: var(--green);
@@ -31,16 +28,12 @@
     overflow-x: hidden;
     min-height: 100vh;
   }
-
-  /* Scanlines */
   body::before {
     content: '';
     position: fixed; inset: 0;
     background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
     pointer-events: none; z-index: 1000;
   }
-
-  /* CRT Vignette */
   body::after {
     content: '';
     position: fixed; inset: 0;
@@ -48,14 +41,13 @@
     pointer-events: none; z-index: 999;
   }
 
-  /* ── Login Screen ── */
+  /* ── Login ── */
   #login-screen {
     position: fixed; inset: 0;
     background: var(--black);
     display: flex; align-items: center; justify-content: center;
     z-index: 900; flex-direction: column; gap: 2rem;
   }
-
   .login-box {
     border: 1px solid var(--border-bright);
     padding: 2.5rem 3rem;
@@ -63,101 +55,49 @@
     box-shadow: 0 0 40px var(--green-glow), inset 0 0 20px rgba(0,255,65,0.03);
     max-width: 420px; width: 90%;
   }
-
   .login-logo {
     font-family: 'Orbitron', sans-serif;
     font-size: 22px; font-weight: 900;
-    color: var(--green);
-    letter-spacing: 4px;
-    margin-bottom: 0.4rem;
+    color: var(--green); letter-spacing: 4px; margin-bottom: 0.4rem;
   }
   .login-logo span { color: var(--cyan); }
-
-  .login-subtitle {
-    font-size: 11px; color: var(--green-dim);
-    letter-spacing: 3px; margin-bottom: 2rem;
-  }
-
-  .login-field {
-    margin-bottom: 1.2rem;
-  }
-  .login-field label {
-    display: block; font-size: 11px;
-    color: var(--green-dim); letter-spacing: 2px;
-    margin-bottom: 0.4rem;
-  }
+  .login-subtitle { font-size: 11px; color: var(--green-dim); letter-spacing: 3px; margin-bottom: 2rem; }
+  .login-field { margin-bottom: 1.2rem; }
+  .login-field label { display: block; font-size: 11px; color: var(--green-dim); letter-spacing: 2px; margin-bottom: 0.4rem; }
   .login-field input {
-    width: 100%;
-    background: #010801;
+    width: 100%; background: #010801;
     border: 1px solid var(--border-bright);
-    color: var(--cyan);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 14px;
-    padding: 0.6rem 0.8rem;
-    outline: none;
+    color: var(--cyan); font-family: 'Share Tech Mono', monospace;
+    font-size: 14px; padding: 0.6rem 0.8rem; outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
-  .login-field input:focus {
-    border-color: var(--green);
-    box-shadow: 0 0 12px var(--green-glow);
-  }
-
+  .login-field input:focus { border-color: var(--green); box-shadow: 0 0 12px var(--green-glow); }
   .login-btn {
-    width: 100%;
-    background: transparent;
-    border: 1px solid var(--green);
-    color: var(--green);
-    font-family: 'Orbitron', sans-serif;
-    font-size: 12px; letter-spacing: 3px;
-    padding: 0.75rem;
-    cursor: pointer;
-    transition: background 0.2s, box-shadow 0.2s, color 0.2s;
-    margin-top: 0.5rem;
+    width: 100%; background: transparent;
+    border: 1px solid var(--green); color: var(--green);
+    font-family: 'Orbitron', sans-serif; font-size: 12px;
+    letter-spacing: 3px; padding: 0.75rem; cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s, color 0.2s; margin-top: 0.5rem;
   }
-  .login-btn:hover {
-    background: var(--green);
-    color: var(--black);
-    box-shadow: 0 0 20px var(--green-glow);
-  }
-
-  .login-err {
-    color: var(--red); font-size: 12px;
-    margin-top: 0.8rem; text-align: center;
-    display: none;
-  }
+  .login-btn:hover { background: var(--green); color: var(--black); box-shadow: 0 0 20px var(--green-glow); }
+  .login-err { color: var(--red); font-size: 12px; margin-top: 0.8rem; text-align: center; display: none; }
 
   /* ── Dashboard ── */
   #dashboard { display: none; position: relative; z-index: 1; }
 
-  /* Top Nav */
   .topbar {
     position: fixed; top: 0; width: 100%;
     display: flex; align-items: center; justify-content: space-between;
     padding: 0.75rem 2rem;
     background: rgba(0,0,0,0.95);
     border-bottom: 1px solid var(--border);
-    z-index: 500;
-    backdrop-filter: blur(10px);
+    z-index: 500; backdrop-filter: blur(10px);
   }
-  .topbar-logo {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 13px; font-weight: 700;
-    letter-spacing: 4px; color: var(--green);
-  }
+  .topbar-logo { font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 4px; color: var(--green); }
   .topbar-logo span { color: var(--cyan); }
-
-  .topbar-right {
-    display: flex; align-items: center; gap: 1.5rem;
-  }
-  .live-dot {
-    width: 8px; height: 8px;
-    background: var(--green);
-    border-radius: 50%;
-    animation: pulse 1.5s infinite;
-    display: inline-block; margin-right: 6px;
-  }
+  .topbar-right { display: flex; align-items: center; gap: 1.5rem; }
+  .live-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; display: inline-block; margin-right: 6px; }
   .live-label { font-size: 11px; color: var(--green-dim); letter-spacing: 2px; }
-
   .logout-btn {
     background: transparent; border: 1px solid var(--border-bright);
     color: var(--green-dim); font-family: 'Share Tech Mono', monospace;
@@ -166,151 +106,87 @@
   }
   .logout-btn:hover { border-color: var(--red); color: var(--red); }
 
-  /* Main grid */
-  .main {
-    padding: 5rem 2rem 2rem;
-    max-width: 1400px; margin: 0 auto;
-  }
-
-  .page-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 11px; letter-spacing: 5px;
-    color: var(--green-dim); margin-bottom: 1.5rem;
-  }
+  .main { padding: 5rem 2rem 2rem; max-width: 1600px; margin: 0 auto; }
+  .page-title { font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: 5px; color: var(--green-dim); margin-bottom: 1.5rem; }
   .page-title span { color: var(--cyan); }
 
-  /* Stats row */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem; margin-bottom: 1.5rem;
-  }
-
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
   .stat-card {
-    border: 1px solid var(--border);
-    background: var(--panel);
-    padding: 1.2rem 1.5rem;
-    position: relative;
+    border: 1px solid var(--border); background: var(--panel);
+    padding: 1.2rem 1.5rem; position: relative;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
-  .stat-card:hover {
-    border-color: var(--border-bright);
-    box-shadow: 0 0 16px var(--green-glow);
-  }
-  .stat-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0;
-    width: 3px; height: 100%;
-    background: var(--green);
-  }
-  .stat-label {
-    font-size: 10px; color: var(--green-dim);
-    letter-spacing: 3px; margin-bottom: 0.5rem;
-  }
-  .stat-value {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 28px; font-weight: 700;
-    color: var(--green);
-    line-height: 1;
-  }
+  .stat-card:hover { border-color: var(--border-bright); box-shadow: 0 0 16px var(--green-glow); }
+  .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--green); }
+  .stat-label { font-size: 10px; color: var(--green-dim); letter-spacing: 3px; margin-bottom: 0.5rem; }
+  .stat-value { font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 700; color: var(--green); line-height: 1; }
   .stat-value.cyan { color: var(--cyan); }
   .stat-value.yellow { color: var(--yellow); }
-  .stat-sub {
-    font-size: 10px; color: #005511;
-    margin-top: 0.3rem;
-  }
+  .stat-sub { font-size: 10px; color: #005511; margin-top: 0.3rem; }
 
-  /* Grid layout */
-  .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem; margin-bottom: 1rem;
-  }
-  .grid-3 {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 1rem; margin-bottom: 1rem;
-  }
-
-  /* Panel */
-  .panel {
-    border: 1px solid var(--border);
-    background: var(--panel);
-    padding: 1.2rem;
-  }
+  .grid-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .panel { border: 1px solid var(--border); background: var(--panel); padding: 1.2rem; }
   .panel-title {
-    font-size: 10px; letter-spacing: 3px;
-    color: var(--green-dim); margin-bottom: 1rem;
-    padding-bottom: 0.6rem;
+    font-size: 10px; letter-spacing: 3px; color: var(--green-dim);
+    margin-bottom: 1rem; padding-bottom: 0.6rem;
     border-bottom: 1px solid var(--border);
     display: flex; justify-content: space-between; align-items: center;
   }
   .panel-title span { color: var(--cyan); }
 
-  /* Bar chart */
   .bar-chart { display: flex; flex-direction: column; gap: 0.5rem; }
-  .bar-row {
-    display: grid;
-    grid-template-columns: 80px 1fr 40px;
-    gap: 0.6rem; align-items: center; font-size: 11px;
-  }
+  .bar-row { display: grid; grid-template-columns: 80px 1fr 40px; gap: 0.6rem; align-items: center; font-size: 11px; }
   .bar-label { color: var(--green-dim); }
-  .bar-track {
-    height: 10px; background: #010801;
-    border: 1px solid var(--border); position: relative;
-  }
-  .bar-fill {
-    height: 100%;
-    background: linear-gradient(to right, var(--green-dim), var(--green));
-    transition: width 1s cubic-bezier(0.4,0,0.2,1);
-  }
-  .bar-fill.cyan {
-    background: linear-gradient(to right, #007b78, var(--cyan));
-  }
+  .bar-track { height: 10px; background: #010801; border: 1px solid var(--border); position: relative; }
+  .bar-fill { height: 100%; background: linear-gradient(to right, var(--green-dim), var(--green)); transition: width 1s cubic-bezier(0.4,0,0.2,1); }
+  .bar-fill.cyan { background: linear-gradient(to right, #007b78, var(--cyan)); }
   .bar-count { color: var(--cyan); text-align: right; }
 
-  /* Sparkline chart */
   .sparkline-wrap { width: 100%; height: 80px; }
   .sparkline-wrap svg { width: 100%; height: 100%; }
 
-  /* Visitor table */
-  .visitor-table { width: 100%; border-collapse: collapse; font-size: 11px; }
-  .visitor-table th {
-    text-align: left; color: var(--green-dim);
-    letter-spacing: 2px; font-size: 10px;
-    padding: 0.4rem 0.6rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .visitor-table td {
-    padding: 0.45rem 0.6rem;
-    border-bottom: 1px solid #00ff410a;
-    vertical-align: top;
-    color: #00cc33;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
-  }
-  .visitor-table tr:hover td { background: #00ff4108; color: var(--green); }
-  .visitor-table td.cyan { color: var(--cyan); }
-  .visitor-table td.dim { color: #005511; }
-
-  /* Device donut */
-  .donut-wrap {
-    display: flex; align-items: center; justify-content: center;
-    gap: 1.5rem; flex-wrap: wrap;
-  }
-  .donut-legend { display: flex; flex-direction: column; gap: 0.5rem; }
-  .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 11px; }
-  .legend-dot { width: 8px; height: 8px; flex-shrink: 0; }
-
-  /* Table wrap scrollable */
-  .table-wrap { overflow-x: auto; max-height: 360px; overflow-y: auto; }
+  /* ── Visitor Table ── */
+  .table-wrap { overflow-x: auto; max-height: 420px; overflow-y: auto; }
   .table-wrap::-webkit-scrollbar { width: 4px; height: 4px; }
   .table-wrap::-webkit-scrollbar-track { background: #010801; }
   .table-wrap::-webkit-scrollbar-thumb { background: var(--green-dim); }
 
-  /* Refresh btn */
+  .visitor-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .visitor-table th {
+    text-align: left; color: var(--green-dim);
+    letter-spacing: 2px; font-size: 10px;
+    padding: 0.4rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    position: sticky; top: 0;
+    background: var(--panel); z-index: 10;
+  }
+  .visitor-table td {
+    padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid #00ff410a;
+    color: #00cc33;
+    white-space: nowrap;
+  }
+  .visitor-table tr:hover td { background: #00ff4108; color: var(--green); }
+  .visitor-table td.cyan { color: var(--cyan); }
+  .visitor-table td.dim { color: #005511; }
+  .visitor-table td.gps { color: var(--yellow); }
+
+  .map-link {
+    color: var(--cyan); text-decoration: none;
+    border-bottom: 1px dotted var(--cyan);
+    transition: color 0.2s;
+  }
+  .map-link:hover { color: var(--green); }
+
+  .badge {
+    display: inline-block; font-size: 9px;
+    padding: 1px 5px; letter-spacing: 1px;
+    border: 1px solid; margin-left: 4px;
+  }
+  .badge-gps { color: var(--yellow); border-color: var(--yellow); }
+  .badge-ip { color: #005511; border-color: #005511; }
+
   .refresh-btn {
     background: transparent; border: 1px solid var(--border-bright);
     color: var(--green-dim); font-family: 'Share Tech Mono', monospace;
@@ -319,45 +195,22 @@
   }
   .refresh-btn:hover { border-color: var(--green); color: var(--green); }
 
-  /* Loader */
-  .loader-line {
-    height: 2px; background: var(--border);
-    position: relative; overflow: hidden; margin-bottom: 1.5rem;
-  }
+  .loader-line { height: 2px; background: var(--border); position: relative; overflow: hidden; margin-bottom: 1.5rem; }
   .loader-line::after {
-    content: ''; position: absolute; left: -40%;
-    width: 40%; height: 100%;
+    content: ''; position: absolute; left: -40%; width: 40%; height: 100%;
     background: linear-gradient(to right, transparent, var(--green), transparent);
     animation: scan 1.5s linear infinite;
   }
 
-  /* Empty */
   .empty { color: #005511; font-size: 12px; text-align: center; padding: 2rem 0; }
 
-  /* Animations */
-  @keyframes pulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--green); }
-    50% { opacity: 0.4; box-shadow: none; }
-  }
-  @keyframes scan {
-    to { left: 140%; }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--green); } 50% { opacity: 0.4; box-shadow: none; } }
+  @keyframes scan { to { left: 140%; } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   .fade-in { animation: fadeIn 0.5s ease forwards; }
 
-  /* Config notice */
-  .config-notice {
-    background: #1a0500; border: 1px solid #ff2e2e44;
-    color: var(--red); font-size: 11px; letter-spacing: 1px;
-    padding: 0.8rem 1.2rem; margin-bottom: 1.5rem;
-    line-height: 1.8;
-  }
-
   @media (max-width: 768px) {
-    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
     .main { padding: 4.5rem 1rem 1rem; }
     .topbar { padding: 0.75rem 1rem; }
     .stats-row { grid-template-columns: 1fr 1fr; }
@@ -366,12 +219,11 @@
 </head>
 <body>
 
-<!-- ══ LOGIN SCREEN ════════════════════════════════════════════ -->
+<!-- ── Login ── -->
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">MUJAHID<span>.</span>CTRL</div>
     <div class="login-subtitle">SECURE OPERATOR ACCESS</div>
-
     <div class="login-field">
       <label>▸ API ENDPOINT URL</label>
       <input type="text" id="api-url" placeholder="https://your-api.vercel.app" autocomplete="off" />
@@ -386,9 +238,8 @@
   <div style="font-size:11px;color:#004400;letter-spacing:2px;">PORTFOLIO ANALYTICS COMMAND CENTER</div>
 </div>
 
-<!-- ══ DASHBOARD ════════════════════════════════════════════════ -->
+<!-- ── Dashboard ── -->
 <div id="dashboard">
-
   <nav class="topbar">
     <div class="topbar-logo">MUJAHID<span>.</span>CTRL</div>
     <div class="topbar-right">
@@ -399,15 +250,9 @@
 
   <div class="main">
     <div class="page-title">▸ COMMAND_CENTER / <span>visitor_analytics.sh</span></div>
-
-    <div id="config-notice" class="config-notice" style="display:none">
-      ⚠ DEMO MODE — No real API configured. Showing synthetic data.<br>
-      Set your Vercel API URL and secret key to see real visitor data.
-    </div>
-
     <div id="loader" class="loader-line"></div>
 
-    <!-- Stats Row -->
+    <!-- Stats -->
     <div class="stats-row fade-in">
       <div class="stat-card">
         <div class="stat-label">TOTAL VISITS</div>
@@ -425,29 +270,28 @@
         <div class="stat-sub">unique origins</div>
       </div>
       <div class="stat-card">
+        <div class="stat-label">GPS TRACKED</div>
+        <div class="stat-value" id="stat-gps" style="color:var(--yellow)">—</div>
+        <div class="stat-sub">exact location</div>
+      </div>
+      <div class="stat-card">
         <div class="stat-label">LAST VISIT</div>
         <div class="stat-value" id="stat-last" style="font-size:14px;margin-top:4px">—</div>
         <div class="stat-sub" id="stat-last-country">—</div>
       </div>
     </div>
 
-    <!-- Sparkline + Countries -->
+    <!-- Charts -->
     <div class="grid-3">
       <div class="panel fade-in">
         <div class="panel-title">DAILY VISITS — LAST 7 DAYS <button class="refresh-btn" onclick="loadData()">↻ REFRESH</button></div>
-        <div class="sparkline-wrap" id="sparkline-wrap">
-          <div class="empty">loading...</div>
-        </div>
+        <div class="sparkline-wrap" id="sparkline-wrap"><div class="empty">loading...</div></div>
         <div id="sparkline-labels" style="display:flex;justify-content:space-between;font-size:9px;color:#005511;margin-top:4px;padding:0 2px;"></div>
       </div>
-
       <div class="panel fade-in">
-        <div class="panel-title">TOP COUNTRIES <span id="country-count"></span></div>
-        <div class="bar-chart" id="country-chart">
-          <div class="empty">loading...</div>
-        </div>
+        <div class="panel-title">TOP COUNTRIES</div>
+        <div class="bar-chart" id="country-chart"><div class="empty">loading...</div></div>
       </div>
-
       <div class="panel fade-in">
         <div class="panel-title">DEVICES & BROWSERS</div>
         <div id="device-chart" style="margin-bottom:1rem;"></div>
@@ -458,7 +302,7 @@
     <!-- Visitor Table -->
     <div class="panel fade-in">
       <div class="panel-title">
-        RECENT VISITORS
+        RECENT VISITORS — FULL INTEL
         <span id="visit-count" style="color:#005511;font-size:10px;"></span>
       </div>
       <div class="table-wrap">
@@ -467,51 +311,45 @@
             <tr>
               <th>#</th>
               <th>TIMESTAMP</th>
+              <th>LOCATION SOURCE</th>
               <th>COUNTRY</th>
               <th>CITY</th>
-              <th>IP</th>
-              <th>DEVICE</th>
-              <th>BROWSER</th>
+              <th>REGION</th>
+              <th>COORDINATES</th>
+              <th>GPS ACCURACY</th>
+              <th>ISP / NETWORK</th>
+              <th>IP ADDRESS</th>
+              <th>DEVICE BRAND</th>
+              <th>DEVICE TYPE</th>
               <th>OS</th>
-              <th>REFERRER</th>
+              <th>BROWSER</th>
               <th>SCREEN</th>
+              <th>LANGUAGE</th>
+              <th>TIMEZONE</th>
+              <th>REFERRER</th>
             </tr>
           </thead>
           <tbody id="visitor-tbody">
-            <tr><td colspan="10" class="empty">loading...</td></tr>
+            <tr><td colspan="18" class="empty">loading...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
-
   </div>
 </div>
 
 <script>
-// ══ CONFIG ════════════════════════════════════════════════════
-// You can hardcode these after deployment so you don't need to login every time:
-// const HARDCODED_URL = 'https://your-api.vercel.app';
-// const HARDCODED_KEY = 'your_secret_key';
 const HARDCODED_URL = '';
 const HARDCODED_KEY = '';
 
 let API_URL = '';
 let API_KEY = '';
 
-// ══ AUTH ══════════════════════════════════════════════════════
 async function doLogin() {
   const url = (document.getElementById('api-url').value || HARDCODED_URL).replace(/\/$/, '');
   const key = document.getElementById('api-key').value || HARDCODED_KEY;
-
-  if (!url || !key) {
-    showErr('Please enter both API URL and secret key.');
-    return;
-  }
-
-  API_URL = url;
-  API_KEY = key;
-
-  // Try to fetch
+  if (!url || !key) { showErr('Please enter both API URL and secret key.'); return; }
+  API_URL = url; API_KEY = key;
   const ok = await loadData(true);
   if (ok) {
     localStorage.setItem('dash_url', API_URL);
@@ -530,58 +368,38 @@ function doLogout() {
 
 function showErr(msg) {
   const el = document.getElementById('login-err');
-  el.textContent = msg;
-  el.style.display = 'block';
+  el.textContent = msg; el.style.display = 'block';
 }
 
-// Auto-login if saved
 window.addEventListener('DOMContentLoaded', () => {
   const savedUrl = localStorage.getItem('dash_url') || HARDCODED_URL;
   const savedKey = localStorage.getItem('dash_key') || HARDCODED_KEY;
   if (savedUrl && savedKey) {
-    API_URL = savedUrl;
-    API_KEY = savedKey;
+    API_URL = savedUrl; API_KEY = savedKey;
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
     loadData();
   }
-
-  // Enter key on login
-  document.getElementById('api-key').addEventListener('keydown', e => {
-    if (e.key === 'Enter') doLogin();
-  });
+  document.getElementById('api-key').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 });
 
-// ══ DATA LOADING ══════════════════════════════════════════════
 async function loadData(returnResult = false) {
   try {
     const res = await fetch(`${API_URL}/api/visitors?limit=200`, {
       headers: { 'x-api-key': API_KEY }
     });
-
-    if (!res.ok) {
-      if (returnResult) { showErr('⚠ Auth failed. Check your key.'); return false; }
-      return false;
-    }
-
+    if (!res.ok) { if (returnResult) { showErr('⚠ Auth failed. Check your key.'); return false; } return false; }
     const data = await res.json();
     renderDashboard(data);
     if (returnResult) return true;
-
   } catch (e) {
-    if (returnResult) {
-      showErr('⚠ Cannot reach API. Check the URL.');
-      return false;
-    }
-    console.error('Load error', e);
+    if (returnResult) { showErr('⚠ Cannot reach API. Check the URL.'); return false; }
   }
 }
 
-// ══ RENDER ════════════════════════════════════════════════════
 function renderDashboard(data) {
   const { total, visits, stats } = data;
 
-  // Stats
   document.getElementById('stat-total').textContent = total.toLocaleString();
 
   const today = new Date().toISOString().slice(0, 10);
@@ -590,36 +408,29 @@ function renderDashboard(data) {
   document.getElementById('stat-today-date').textContent = today;
   document.getElementById('stat-countries').textContent = stats.countries.length;
 
+  const gpsCount = visits.filter(v => v.locationSource === 'gps').length;
+  document.getElementById('stat-gps').textContent = gpsCount;
+
   if (visits.length > 0) {
     const last = visits[0];
     document.getElementById('stat-last').textContent = timeAgo(last.timestamp);
-    document.getElementById('stat-last-country').textContent =
-      `${last.country} · ${last.device}`;
+    document.getElementById('stat-last-country').textContent = `${last.country} · ${last.deviceBrand || last.device}`;
   }
 
   document.getElementById('visit-count').textContent = `${visits.length} recent`;
 
-  // Sparkline
   renderSparkline(stats.daily);
-
-  // Countries
   renderBars('country-chart', stats.countries.slice(0, 8).map(c => ({
     label: c.country === 'unknown' ? '???' : c.country,
-    count: c.count,
-    max: stats.countries[0]?.count || 1
+    count: c.count, max: stats.countries[0]?.count || 1
   })));
-
-  // Devices
   renderSimpleBars('device-chart', stats.devices, 'DEVICES');
   renderSimpleBars('browser-chart', stats.browsers, 'BROWSERS');
-
-  // Table
-  renderTable(visits.slice(0, 200));
+  renderTable(visits);
 
   document.getElementById('loader').style.display = 'none';
 }
 
-// Sparkline SVG
 function renderSparkline(daily) {
   const wrap = document.getElementById('sparkline-wrap');
   const labels = document.getElementById('sparkline-labels');
@@ -630,7 +441,6 @@ function renderSparkline(daily) {
   const W = 400, H = 70, pad = 6;
   const xs = vals.map((_, i) => pad + i * (W - pad * 2) / (vals.length - 1));
   const ys = vals.map(v => H - pad - (v / max) * (H - pad * 2));
-
   const pts = xs.map((x, i) => `${x},${ys[i]}`).join(' ');
   const area = `${xs[0]},${H} ` + pts + ` ${xs[xs.length-1]},${H}`;
 
@@ -644,14 +454,15 @@ function renderSparkline(daily) {
       </defs>
       <polygon points="${area}" fill="url(#sg)"/>
       <polyline points="${pts}" fill="none" stroke="#00ff41" stroke-width="1.5" stroke-linejoin="round"/>
-      ${xs.map((x, i) => `<circle cx="${x}" cy="${ys[i]}" r="3" fill="${vals[i] === max ? '#00fff5' : '#00ff41'}"/>
-        <text x="${x}" y="${ys[i] - 6}" text-anchor="middle" font-size="9" fill="#00b32c" font-family="Share Tech Mono">${vals[i]}</text>`).join('')}
+      ${xs.map((x, i) => `
+        <circle cx="${x}" cy="${ys[i]}" r="3" fill="${vals[i] === max ? '#00fff5' : '#00ff41'}"/>
+        <text x="${x}" y="${ys[i]-6}" text-anchor="middle" font-size="9" fill="#00b32c" font-family="Share Tech Mono">${vals[i]}</text>
+      `).join('')}
     </svg>`;
 
   labels.innerHTML = daily.map(d => `<span>${d.date.slice(5)}</span>`).join('');
 }
 
-// Country bars
 function renderBars(id, items) {
   const el = document.getElementById(id);
   if (!items || items.length === 0) { el.innerHTML = '<div class="empty">no data</div>'; return; }
@@ -664,7 +475,6 @@ function renderBars(id, items) {
     </div>`).join('');
 }
 
-// Simple key/value bars
 function renderSimpleBars(id, obj, title) {
   const el = document.getElementById(id);
   if (!obj || Object.keys(obj).length === 0) { el.innerHTML = `<div class="empty" style="font-size:10px">${title}: no data</div>`; return; }
@@ -679,29 +489,46 @@ function renderSimpleBars(id, obj, title) {
       </div>`).join('');
 }
 
-// Visitor table
 function renderTable(visits) {
   const tbody = document.getElementById('visitor-tbody');
   if (!visits || visits.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="10" class="empty">No visitors yet. Share your portfolio!</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="18" class="empty">No visitors yet. Share your portfolio!</td></tr>';
     return;
   }
-  tbody.innerHTML = visits.map((v, i) => `
-    <tr>
+  tbody.innerHTML = visits.map((v, i) => {
+    const isGPS = v.locationSource === 'gps';
+    const hasCoords = v.latitude && v.longitude;
+    const mapsUrl = hasCoords ? `https://maps.google.com/?q=${v.latitude},${v.longitude}` : null;
+
+    return `<tr>
       <td class="dim">${i + 1}</td>
       <td class="cyan">${formatTime(v.timestamp)}</td>
+      <td>${isGPS
+        ? '<span class="badge badge-gps">🎯 GPS</span>'
+        : '<span class="badge badge-ip">🌍 IP</span>'}</td>
       <td>${v.country || '??'}</td>
       <td>${v.city || '—'}</td>
+      <td>${v.region || '—'}</td>
+      <td>${hasCoords
+        ? `<a class="map-link" href="${mapsUrl}" target="_blank">
+            ${parseFloat(v.latitude).toFixed(5)}, ${parseFloat(v.longitude).toFixed(5)}
+           </a>`
+        : '—'}</td>
+      <td class="${isGPS ? 'gps' : 'dim'}">${v.gpsAccuracy ? '±' + Math.round(v.gpsAccuracy) + 'm' : '—'}</td>
+      <td class="dim">${v.isp || '—'}</td>
       <td class="dim">${maskIP(v.ip)}</td>
+      <td>${v.deviceBrand || '—'}</td>
       <td>${v.device || '—'}</td>
-      <td>${v.browser || '—'}</td>
-      <td>${v.os || '—'}</td>
-      <td title="${v.referrer || 'direct'}">${shortRef(v.referrer)}</td>
+      <td>${v.os || '—'} ${v.osVersion || ''}</td>
+      <td>${v.browser || '—'} ${v.browserVersion || ''}</td>
       <td class="dim">${v.screen || '—'}</td>
-    </tr>`).join('');
+      <td class="dim">${v.language || '—'}</td>
+      <td class="dim">${v.timezone || '—'}</td>
+      <td title="${v.referrer || 'direct'}">${shortRef(v.referrer)}</td>
+    </tr>`;
+  }).join('');
 }
 
-// ══ HELPERS ═══════════════════════════════════════════════════
 function formatTime(iso) {
   if (!iso) return '—';
   const d = new Date(iso);
@@ -725,17 +552,11 @@ function maskIP(ip) {
 
 function shortRef(ref) {
   if (!ref || ref === 'direct' || ref === '') return 'direct';
-  try {
-    const u = new URL(ref);
-    return u.hostname.replace('www.', '').substring(0, 16);
-  } catch {
-    return ref.substring(0, 16);
-  }
+  try { return new URL(ref).hostname.replace('www.', '').substring(0, 20); }
+  catch { return ref.substring(0, 20); }
 }
 
-// Auto-refresh every 60s
 setInterval(() => { if (API_URL && API_KEY) loadData(); }, 60000);
 </script>
-
 </body>
 </html>
