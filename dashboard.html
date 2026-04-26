@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTRL — Mujahid Command Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff41;
+    --green-dim: #00b32c;
+    --green-faint: #003b0f;
+    --green-glow: rgba(0,255,65,0.12);
+    --cyan: #00fff5;
+    --red: #ff2e2e;
+    --yellow: #ffe600;
+    --black: #000000;
+    --dark: #050f05;
+    --panel: #040d04;
+    --border: #00ff4122;
+    --border-bright: #00ff4166;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--green);
+    font-family: 'Share Tech Mono', monospace;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* Scanlines */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+    pointer-events: none; z-index: 1000;
+  }
+
+  /* CRT Vignette */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.6) 100%);
+    pointer-events: none; z-index: 999;
+  }
+
+  /* ── Login Screen ── */
+  #login-screen {
+    position: fixed; inset: 0;
+    background: var(--black);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 900; flex-direction: column; gap: 2rem;
+  }
+
+  .login-box {
+    border: 1px solid var(--border-bright);
+    padding: 2.5rem 3rem;
+    background: var(--panel);
+    box-shadow: 0 0 40px var(--green-glow), inset 0 0 20px rgba(0,255,65,0.03);
+    max-width: 420px; width: 90%;
+  }
+
+  .login-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 22px; font-weight: 900;
+    color: var(--green);
+    letter-spacing: 4px;
+    margin-bottom: 0.4rem;
+  }
+  .login-logo span { color: var(--cyan); }
+
+  .login-subtitle {
+    font-size: 11px; color: var(--green-dim);
+    letter-spacing: 3px; margin-bottom: 2rem;
+  }
+
+  .login-field {
+    margin-bottom: 1.2rem;
+  }
+  .login-field label {
+    display: block; font-size: 11px;
+    color: var(--green-dim); letter-spacing: 2px;
+    margin-bottom: 0.4rem;
+  }
+  .login-field input {
+    width: 100%;
+    background: #010801;
+    border: 1px solid var(--border-bright);
+    color: var(--cyan);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    padding: 0.6rem 0.8rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .login-field input:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 12px var(--green-glow);
+  }
+
+  .login-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px; letter-spacing: 3px;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+    margin-top: 0.5rem;
+  }
+  .login-btn:hover {
+    background: var(--green);
+    color: var(--black);
+    box-shadow: 0 0 20px var(--green-glow);
+  }
+
+  .login-err {
+    color: var(--red); font-size: 12px;
+    margin-top: 0.8rem; text-align: center;
+    display: none;
+  }
+
+  /* ── Dashboard ── */
+  #dashboard { display: none; position: relative; z-index: 1; }
+
+  /* Top Nav */
+  .topbar {
+    position: fixed; top: 0; width: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem 2rem;
+    background: rgba(0,0,0,0.95);
+    border-bottom: 1px solid var(--border);
+    z-index: 500;
+    backdrop-filter: blur(10px);
+  }
+  .topbar-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 4px; color: var(--green);
+  }
+  .topbar-logo span { color: var(--cyan); }
+
+  .topbar-right {
+    display: flex; align-items: center; gap: 1.5rem;
+  }
+  .live-dot {
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+    display: inline-block; margin-right: 6px;
+  }
+  .live-label { font-size: 11px; color: var(--green-dim); letter-spacing: 2px; }
+
+  .logout-btn {
+    background: transparent; border: 1px solid var(--border-bright);
+    color: var(--green-dim); font-family: 'Share Tech Mono', monospace;
+    font-size: 11px; letter-spacing: 2px; cursor: pointer;
+    padding: 0.35rem 0.8rem; transition: 0.2s;
+  }
+  .logout-btn:hover { border-color: var(--red); color: var(--red); }
+
+  /* Main grid */
+  .main {
+    padding: 5rem 2rem 2rem;
+    max-width: 1400px; margin: 0 auto;
+  }
+
+  .page-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px; letter-spacing: 5px;
+    color: var(--green-dim); margin-bottom: 1.5rem;
+  }
+  .page-title span { color: var(--cyan); }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem; margin-bottom: 1.5rem;
+  }
+
+  .stat-card {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    padding: 1.2rem 1.5rem;
+    position: relative;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .stat-card:hover {
+    border-color: var(--border-bright);
+    box-shadow: 0 0 16px var(--green-glow);
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--green);
+  }
+  .stat-label {
+    font-size: 10px; color: var(--green-dim);
+    letter-spacing: 3px; margin-bottom: 0.5rem;
+  }
+  .stat-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px; font-weight: 700;
+    color: var(--green);
+    line-height: 1;
+  }
+  .stat-value.cyan { color: var(--cyan); }
+  .stat-value.yellow { color: var(--yellow); }
+  .stat-sub {
+    font-size: 10px; color: #005511;
+    margin-top: 0.3rem;
+  }
+
+  /* Grid layout */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem; margin-bottom: 1rem;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1rem; margin-bottom: 1rem;
+  }
+
+  /* Panel */
+  .panel {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    padding: 1.2rem;
+  }
+  .panel-title {
+    font-size: 10px; letter-spacing: 3px;
+    color: var(--green-dim); margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .panel-title span { color: var(--cyan); }
+
+  /* Bar chart */
+  .bar-chart { display: flex; flex-direction: column; gap: 0.5rem; }
+  .bar-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 40px;
+    gap: 0.6rem; align-items: center; font-size: 11px;
+  }
+  .bar-label { color: var(--green-dim); }
+  .bar-track {
+    height: 10px; background: #010801;
+    border: 1px solid var(--border); position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--green-dim), var(--green));
+    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+  }
+  .bar-fill.cyan {
+    background: linear-gradient(to right, #007b78, var(--cyan));
+  }
+  .bar-count { color: var(--cyan); text-align: right; }
+
+  /* Sparkline chart */
+  .sparkline-wrap { width: 100%; height: 80px; }
+  .sparkline-wrap svg { width: 100%; height: 100%; }
+
+  /* Visitor table */
+  .visitor-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .visitor-table th {
+    text-align: left; color: var(--green-dim);
+    letter-spacing: 2px; font-size: 10px;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .visitor-table td {
+    padding: 0.45rem 0.6rem;
+    border-bottom: 1px solid #00ff410a;
+    vertical-align: top;
+    color: #00cc33;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+  .visitor-table tr:hover td { background: #00ff4108; color: var(--green); }
+  .visitor-table td.cyan { color: var(--cyan); }
+  .visitor-table td.dim { color: #005511; }
+
+  /* Device donut */
+  .donut-wrap {
+    display: flex; align-items: center; justify-content: center;
+    gap: 1.5rem; flex-wrap: wrap;
+  }
+  .donut-legend { display: flex; flex-direction: column; gap: 0.5rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 11px; }
+  .legend-dot { width: 8px; height: 8px; flex-shrink: 0; }
+
+  /* Table wrap scrollable */
+  .table-wrap { overflow-x: auto; max-height: 360px; overflow-y: auto; }
+  .table-wrap::-webkit-scrollbar { width: 4px; height: 4px; }
+  .table-wrap::-webkit-scrollbar-track { background: #010801; }
+  .table-wrap::-webkit-scrollbar-thumb { background: var(--green-dim); }
+
+  /* Refresh btn */
+  .refresh-btn {
+    background: transparent; border: 1px solid var(--border-bright);
+    color: var(--green-dim); font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; letter-spacing: 2px; cursor: pointer;
+    padding: 0.2rem 0.6rem; transition: 0.2s;
+  }
+  .refresh-btn:hover { border-color: var(--green); color: var(--green); }
+
+  /* Loader */
+  .loader-line {
+    height: 2px; background: var(--border);
+    position: relative; overflow: hidden; margin-bottom: 1.5rem;
+  }
+  .loader-line::after {
+    content: ''; position: absolute; left: -40%;
+    width: 40%; height: 100%;
+    background: linear-gradient(to right, transparent, var(--green), transparent);
+    animation: scan 1.5s linear infinite;
+  }
+
+  /* Empty */
+  .empty { color: #005511; font-size: 12px; text-align: center; padding: 2rem 0; }
+
+  /* Animations */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--green); }
+    50% { opacity: 0.4; box-shadow: none; }
+  }
+  @keyframes scan {
+    to { left: 140%; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeIn 0.5s ease forwards; }
+
+  /* Config notice */
+  .config-notice {
+    background: #1a0500; border: 1px solid #ff2e2e44;
+    color: var(--red); font-size: 11px; letter-spacing: 1px;
+    padding: 0.8rem 1.2rem; margin-bottom: 1.5rem;
+    line-height: 1.8;
+  }
+
+  @media (max-width: 768px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .main { padding: 4.5rem 1rem 1rem; }
+    .topbar { padding: 0.75rem 1rem; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN SCREEN ════════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">MUJAHID<span>.</span>CTRL</div>
+    <div class="login-subtitle">SECURE OPERATOR ACCESS</div>
+
+    <div class="login-field">
+      <label>▸ API ENDPOINT URL</label>
+      <input type="text" id="api-url" placeholder="https://your-api.vercel.app" autocomplete="off" />
+    </div>
+    <div class="login-field">
+      <label>▸ SECRET KEY</label>
+      <input type="password" id="api-key" placeholder="your_secret_key" autocomplete="off" />
+    </div>
+    <button class="login-btn" onclick="doLogin()">[ AUTHENTICATE → ]</button>
+    <div class="login-err" id="login-err">⚠ Authentication failed. Check URL & key.</div>
+  </div>
+  <div style="font-size:11px;color:#004400;letter-spacing:2px;">PORTFOLIO ANALYTICS COMMAND CENTER</div>
+</div>
+
+<!-- ══ DASHBOARD ════════════════════════════════════════════════ -->
+<div id="dashboard">
+
+  <nav class="topbar">
+    <div class="topbar-logo">MUJAHID<span>.</span>CTRL</div>
+    <div class="topbar-right">
+      <div><span class="live-dot"></span><span class="live-label">LIVE</span></div>
+      <button class="logout-btn" onclick="doLogout()">LOGOUT</button>
+    </div>
+  </nav>
+
+  <div class="main">
+    <div class="page-title">▸ COMMAND_CENTER / <span>visitor_analytics.sh</span></div>
+
+    <div id="config-notice" class="config-notice" style="display:none">
+      ⚠ DEMO MODE — No real API configured. Showing synthetic data.<br>
+      Set your Vercel API URL and secret key to see real visitor data.
+    </div>
+
+    <div id="loader" class="loader-line"></div>
+
+    <!-- Stats Row -->
+    <div class="stats-row fade-in">
+      <div class="stat-card">
+        <div class="stat-label">TOTAL VISITS</div>
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-sub">all time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">TODAY</div>
+        <div class="stat-value cyan" id="stat-today">—</div>
+        <div class="stat-sub" id="stat-today-date">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">COUNTRIES</div>
+        <div class="stat-value yellow" id="stat-countries">—</div>
+        <div class="stat-sub">unique origins</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">LAST VISIT</div>
+        <div class="stat-value" id="stat-last" style="font-size:14px;margin-top:4px">—</div>
+        <div class="stat-sub" id="stat-last-country">—</div>
+      </div>
+    </div>
+
+    <!-- Sparkline + Countries -->
+    <div class="grid-3">
+      <div class="panel fade-in">
+        <div class="panel-title">DAILY VISITS — LAST 7 DAYS <button class="refresh-btn" onclick="loadData()">↻ REFRESH</button></div>
+        <div class="sparkline-wrap" id="sparkline-wrap">
+          <div class="empty">loading...</div>
+        </div>
+        <div id="sparkline-labels" style="display:flex;justify-content:space-between;font-size:9px;color:#005511;margin-top:4px;padding:0 2px;"></div>
+      </div>
+
+      <div class="panel fade-in">
+        <div class="panel-title">TOP COUNTRIES <span id="country-count"></span></div>
+        <div class="bar-chart" id="country-chart">
+          <div class="empty">loading...</div>
+        </div>
+      </div>
+
+      <div class="panel fade-in">
+        <div class="panel-title">DEVICES & BROWSERS</div>
+        <div id="device-chart" style="margin-bottom:1rem;"></div>
+        <div id="browser-chart"></div>
+      </div>
+    </div>
+
+    <!-- Visitor Table -->
+    <div class="panel fade-in">
+      <div class="panel-title">
+        RECENT VISITORS
+        <span id="visit-count" style="color:#005511;font-size:10px;"></span>
+      </div>
+      <div class="table-wrap">
+        <table class="visitor-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>TIMESTAMP</th>
+              <th>COUNTRY</th>
+              <th>CITY</th>
+              <th>IP</th>
+              <th>DEVICE</th>
+              <th>BROWSER</th>
+              <th>OS</th>
+              <th>REFERRER</th>
+              <th>SCREEN</th>
+            </tr>
+          </thead>
+          <tbody id="visitor-tbody">
+            <tr><td colspan="10" class="empty">loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ══ CONFIG ════════════════════════════════════════════════════
+// You can hardcode these after deployment so you don't need to login every time:
+// const HARDCODED_URL = 'https://your-api.vercel.app';
+// const HARDCODED_KEY = 'your_secret_key';
+const HARDCODED_URL = '';
+const HARDCODED_KEY = '';
+
+let API_URL = '';
+let API_KEY = '';
+
+// ══ AUTH ══════════════════════════════════════════════════════
+async function doLogin() {
+  const url = (document.getElementById('api-url').value || HARDCODED_URL).replace(/\/$/, '');
+  const key = document.getElementById('api-key').value || HARDCODED_KEY;
+
+  if (!url || !key) {
+    showErr('Please enter both API URL and secret key.');
+    return;
+  }
+
+  API_URL = url;
+  API_KEY = key;
+
+  // Try to fetch
+  const ok = await loadData(true);
+  if (ok) {
+    localStorage.setItem('dash_url', API_URL);
+    localStorage.setItem('dash_key', API_KEY);
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+  }
+}
+
+function doLogout() {
+  localStorage.removeItem('dash_url');
+  localStorage.removeItem('dash_key');
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+}
+
+function showErr(msg) {
+  const el = document.getElementById('login-err');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+// Auto-login if saved
+window.addEventListener('DOMContentLoaded', () => {
+  const savedUrl = localStorage.getItem('dash_url') || HARDCODED_URL;
+  const savedKey = localStorage.getItem('dash_key') || HARDCODED_KEY;
+  if (savedUrl && savedKey) {
+    API_URL = savedUrl;
+    API_KEY = savedKey;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadData();
+  }
+
+  // Enter key on login
+  document.getElementById('api-key').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+});
+
+// ══ DATA LOADING ══════════════════════════════════════════════
+async function loadData(returnResult = false) {
+  try {
+    const res = await fetch(`${API_URL}/api/visitors?limit=200`, {
+      headers: { 'x-api-key': API_KEY }
+    });
+
+    if (!res.ok) {
+      if (returnResult) { showErr('⚠ Auth failed. Check your key.'); return false; }
+      return false;
+    }
+
+    const data = await res.json();
+    renderDashboard(data);
+    if (returnResult) return true;
+
+  } catch (e) {
+    if (returnResult) {
+      showErr('⚠ Cannot reach API. Check the URL.');
+      return false;
+    }
+    console.error('Load error', e);
+  }
+}
+
+// ══ RENDER ════════════════════════════════════════════════════
+function renderDashboard(data) {
+  const { total, visits, stats } = data;
+
+  // Stats
+  document.getElementById('stat-total').textContent = total.toLocaleString();
+
+  const today = new Date().toISOString().slice(0, 10);
+  const todayData = stats.daily.find(d => d.date === today);
+  document.getElementById('stat-today').textContent = todayData ? todayData.count : 0;
+  document.getElementById('stat-today-date').textContent = today;
+  document.getElementById('stat-countries').textContent = stats.countries.length;
+
+  if (visits.length > 0) {
+    const last = visits[0];
+    document.getElementById('stat-last').textContent = timeAgo(last.timestamp);
+    document.getElementById('stat-last-country').textContent =
+      `${last.country} · ${last.device}`;
+  }
+
+  document.getElementById('visit-count').textContent = `${visits.length} recent`;
+
+  // Sparkline
+  renderSparkline(stats.daily);
+
+  // Countries
+  renderBars('country-chart', stats.countries.slice(0, 8).map(c => ({
+    label: c.country === 'unknown' ? '???' : c.country,
+    count: c.count,
+    max: stats.countries[0]?.count || 1
+  })));
+
+  // Devices
+  renderSimpleBars('device-chart', stats.devices, 'DEVICES');
+  renderSimpleBars('browser-chart', stats.browsers, 'BROWSERS');
+
+  // Table
+  renderTable(visits.slice(0, 200));
+
+  document.getElementById('loader').style.display = 'none';
+}
+
+// Sparkline SVG
+function renderSparkline(daily) {
+  const wrap = document.getElementById('sparkline-wrap');
+  const labels = document.getElementById('sparkline-labels');
+  if (!daily || daily.length === 0) { wrap.innerHTML = '<div class="empty">no data</div>'; return; }
+
+  const vals = daily.map(d => d.count);
+  const max = Math.max(...vals, 1);
+  const W = 400, H = 70, pad = 6;
+  const xs = vals.map((_, i) => pad + i * (W - pad * 2) / (vals.length - 1));
+  const ys = vals.map(v => H - pad - (v / max) * (H - pad * 2));
+
+  const pts = xs.map((x, i) => `${x},${ys[i]}`).join(' ');
+  const area = `${xs[0]},${H} ` + pts + ` ${xs[xs.length-1]},${H}`;
+
+  wrap.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#00ff41" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#00ff41" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <polygon points="${area}" fill="url(#sg)"/>
+      <polyline points="${pts}" fill="none" stroke="#00ff41" stroke-width="1.5" stroke-linejoin="round"/>
+      ${xs.map((x, i) => `<circle cx="${x}" cy="${ys[i]}" r="3" fill="${vals[i] === max ? '#00fff5' : '#00ff41'}"/>
+        <text x="${x}" y="${ys[i] - 6}" text-anchor="middle" font-size="9" fill="#00b32c" font-family="Share Tech Mono">${vals[i]}</text>`).join('')}
+    </svg>`;
+
+  labels.innerHTML = daily.map(d => `<span>${d.date.slice(5)}</span>`).join('');
+}
+
+// Country bars
+function renderBars(id, items) {
+  const el = document.getElementById(id);
+  if (!items || items.length === 0) { el.innerHTML = '<div class="empty">no data</div>'; return; }
+  const max = Math.max(...items.map(i => i.count), 1);
+  el.innerHTML = items.map(item => `
+    <div class="bar-row">
+      <div class="bar-label">${item.label.substring(0, 10)}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(item.count/max*100).toFixed(1)}%"></div></div>
+      <div class="bar-count">${item.count}</div>
+    </div>`).join('');
+}
+
+// Simple key/value bars
+function renderSimpleBars(id, obj, title) {
+  const el = document.getElementById(id);
+  if (!obj || Object.keys(obj).length === 0) { el.innerHTML = `<div class="empty" style="font-size:10px">${title}: no data</div>`; return; }
+  const entries = Object.entries(obj).sort((a, b) => b[1] - a[1]);
+  const max = entries[0][1];
+  el.innerHTML = `<div style="font-size:9px;color:#005511;letter-spacing:2px;margin-bottom:0.5rem">${title}</div>` +
+    entries.map(([k, v]) => `
+      <div class="bar-row" style="grid-template-columns:70px 1fr 30px">
+        <div class="bar-label">${k}</div>
+        <div class="bar-track"><div class="bar-fill cyan" style="width:${(v/max*100).toFixed(1)}%"></div></div>
+        <div class="bar-count">${v}</div>
+      </div>`).join('');
+}
+
+// Visitor table
+function renderTable(visits) {
+  const tbody = document.getElementById('visitor-tbody');
+  if (!visits || visits.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="10" class="empty">No visitors yet. Share your portfolio!</td></tr>';
+    return;
+  }
+  tbody.innerHTML = visits.map((v, i) => `
+    <tr>
+      <td class="dim">${i + 1}</td>
+      <td class="cyan">${formatTime(v.timestamp)}</td>
+      <td>${v.country || '??'}</td>
+      <td>${v.city || '—'}</td>
+      <td class="dim">${maskIP(v.ip)}</td>
+      <td>${v.device || '—'}</td>
+      <td>${v.browser || '—'}</td>
+      <td>${v.os || '—'}</td>
+      <td title="${v.referrer || 'direct'}">${shortRef(v.referrer)}</td>
+      <td class="dim">${v.screen || '—'}</td>
+    </tr>`).join('');
+}
+
+// ══ HELPERS ═══════════════════════════════════════════════════
+function formatTime(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString() + ' ' + d.toTimeString().slice(0, 8);
+}
+
+function timeAgo(iso) {
+  const sec = Math.floor((Date.now() - new Date(iso)) / 1000);
+  if (sec < 60) return `${sec}s ago`;
+  if (sec < 3600) return `${Math.floor(sec/60)}m ago`;
+  if (sec < 86400) return `${Math.floor(sec/3600)}h ago`;
+  return `${Math.floor(sec/86400)}d ago`;
+}
+
+function maskIP(ip) {
+  if (!ip || ip === 'unknown') return '—';
+  const parts = ip.split('.');
+  if (parts.length === 4) return `${parts[0]}.${parts[1]}.*.*`;
+  return ip.slice(0, 8) + '...';
+}
+
+function shortRef(ref) {
+  if (!ref || ref === 'direct' || ref === '') return 'direct';
+  try {
+    const u = new URL(ref);
+    return u.hostname.replace('www.', '').substring(0, 16);
+  } catch {
+    return ref.substring(0, 16);
+  }
+}
+
+// Auto-refresh every 60s
+setInterval(() => { if (API_URL && API_KEY) loadData(); }, 60000);
+</script>
+
+</body>
+</html>
