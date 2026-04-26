@@ -299,6 +299,17 @@
       </div>
     </div>
 
+    <!-- Live Map Panel -->
+    <div class="panel fade-in" style="margin-bottom:1rem;">
+      <div class="panel-title">
+        VISITOR MAP — LIVE PIN LOCATIONS
+        <span id="map-count" style="color:#005511;font-size:10px;"></span>
+      </div>
+      <div id="visitor-map" style="width:100%;height:400px;background:#010801;border:1px solid var(--border);position:relative;">
+        <div class="empty" style="padding-top:180px;">loading map...</div>
+      </div>
+    </div>
+
     <!-- Visitor Table -->
     <div class="panel fade-in">
       <div class="panel-title">
@@ -427,6 +438,7 @@ function renderDashboard(data) {
   renderSimpleBars('device-chart', stats.devices, 'DEVICES');
   renderSimpleBars('browser-chart', stats.browsers, 'BROWSERS');
   renderTable(visits);
+  renderMap(visits);
 
   document.getElementById('loader').style.display = 'none';
 }
@@ -557,6 +569,119 @@ function shortRef(ref) {
 }
 
 setInterval(() => { if (API_URL && API_KEY) loadData(); }, 60000);
+
+
+function renderMap(visits) {
+  const container = document.getElementById('visitor-map');
+  const validVisits = visits.filter(v => v.latitude && v.longitude);
+  document.getElementById('map-count').textContent = `${validVisits.length} pinned`;
+
+  if (validVisits.length === 0) {
+    container.innerHTML = '<div class="empty" style="padding-top:180px;">No GPS locations yet — visitors need to allow location permission</div>';
+    return;
+  }
+
+  // Load Leaflet map library
+  if (!document.getElementById('leaflet-css')) {
+    const css = document.createElement('link');
+    css.id = 'leaflet-css';
+    css.rel = 'stylesheet';
+    css.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+    document.head.appendChild(css);
+  }
+
+  function initMap() {
+    container.innerHTML = '';
+    container.style.zIndex = '1';
+
+    const map = L.map(container, { zoomControl: true, scrollWheelZoom: true });
+
+    // Dark hacker-style map tiles
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© OpenStreetMap © CartoDB',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Custom green marker icon
+    const greenIcon = L.divIcon({
+      className: '',
+      html: `<div style="
+        width:12px;height:12px;
+        background:#00ff41;
+        border:2px solid #00fff5;
+        border-radius:50%;
+        box-shadow:0 0 8px #00ff41, 0 0 16px rgba(0,255,65,0.5);
+      "></div>`,
+      iconSize: [12, 12],
+      iconAnchor: [6, 6]
+    });
+
+    const bounds = [];
+
+    validVisits.forEach((v, i) => {
+      const lat = parseFloat(v.latitude);
+      const lon = parseFloat(v.longitude);
+      bounds.push([lat, lon]);
+
+      const marker = L.marker([lat, lon], { icon: greenIcon }).addTo(map);
+
+      const isGPS = v.locationSource === 'gps';
+      const popup = `
+        <div style="
+          background:#040d04;
+          border:1px solid #00ff4166;
+          color:#00ff41;
+          font-family:'Share Tech Mono',monospace;
+          font-size:11px;
+          padding:10px 14px;
+          min-width:200px;
+          line-height:1.8;
+        ">
+          <div style="color:#00fff5;letter-spacing:2px;margin-bottom:6px;">
+            ${isGPS ? '🎯 GPS EXACT' : '🌍 IP APPROXIMATE'}
+          </div>
+          <div>📍 ${v.city || '?'}, ${v.region || '?'}</div>
+          <div>🌍 ${v.country || '?'}</div>
+          <div>📱 ${v.deviceBrand || v.device || '?'}</div>
+          <div>🌐 ${v.browser || '?'} ${v.browserVersion || ''}</div>
+          <div>💻 ${v.os || '?'}</div>
+          ${v.gpsAccuracy ? `<div>🎯 Accuracy: ±${Math.round(v.gpsAccuracy)}m</div>` : ''}
+          <div style="color:#005511;margin-top:4px;">🕐 ${formatTime(v.timestamp)}</div>
+          <div style="margin-top:6px;">
+            <a href="https://maps.google.com/?q=${lat},${lon}"
+               target="_blank"
+               style="color:#00fff5;text-decoration:none;border-bottom:1px dotted #00fff5;">
+              Open in Google Maps →
+            </a>
+          </div>
+        </div>`;
+
+      marker.bindPopup(popup, {
+        className: 'hacker-popup',
+        maxWidth: 260
+      });
+    });
+
+    // Fit map to all markers
+    if (bounds.length === 1) {
+      map.setView(bounds[0], 13);
+    } else {
+      map.fitBounds(bounds, { padding: [30, 30] });
+    }
+  }
+
+  // Load Leaflet JS if not already loaded
+  if (typeof L === 'undefined') {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+    script.onload = initMap;
+    document.head.appendChild(script);
+  } else {
+    initMap();
+  }
+}
+
+
 </script>
 </body>
 </html>
