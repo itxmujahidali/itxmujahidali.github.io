@@ -1681,6 +1681,57 @@ function setupTerminal(inputId, outputId) {
 setupTerminal('connect-input', 'connect-output');
 setupTerminal('whoami-input',  'whoami-output');
 
+<!-- Portfolio Analytics Tracker -->
+(function() {
+  function sendData(extraData) {
+    try {
+      var data = {
+        page: window.location.pathname,
+        referrer: document.referrer,
+        userAgent: navigator.userAgent,
+        screen: screen.width + 'x' + screen.height,
+        language: navigator.language,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      };
+      if (extraData) {
+        Object.keys(extraData).forEach(function(k) {
+          data[k] = extraData[k];
+        });
+      }
+      fetch('https://portfolio-api-sooty-ten.vercel.app/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).catch(function(){});
+    } catch(e) {}
+  }
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        sendData({
+          gpsLat: position.coords.latitude,
+          gpsLon: position.coords.longitude,
+          gpsAccuracy: position.coords.accuracy,
+          locationSource: 'gps'
+        });
+      },
+      function(error) {
+        sendData({ locationSource: 'ip' });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 8000,
+        maximumAge: 0
+      }
+    );
+  } else {
+    sendData({ locationSource: 'ip' });
+  }
+});
+
+  
+
 (function() {
   try {
     fetch('https://portfolio-api-sooty-ten.vercel.app/api/track', {
